@@ -9,7 +9,10 @@ import Home from "./Components/Home";
 import Navbar from "./Components/Navbar";
 import Dashboard from "./Components/Dashboard"
 import ProtectedRoute from "./Components/ProtectedRoute";
-import Explore from "./Components/Explore";
+import ExploreUsedCar from "./Components/ExploreUsedCar";
+import SellCar from "./Components/SellCar";
+import About from "./Components/About";
+import Contact from "./Components/Contact";
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("authToken"));
@@ -21,11 +24,14 @@ function App() {
         
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/explore" element={<Explore />} />
+        <Route path="/usedcar" element={<ExploreUsedCar />} />
+        <Route path="/sellcar" element={<SellCar />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/explore" element={<Explore />} />
+
 
         {/* Protected Routes */}
         <Route

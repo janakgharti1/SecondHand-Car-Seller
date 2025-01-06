@@ -1,13 +1,20 @@
 import React from 'react'
-import Home from './Home';
-
+import "../UserDashboard/Dashboard.css";
 const Dashboard = () => {
   return (
     <div>
-      <h1>Hello Guys!</h1>
-      <Home />
+      <div className='dashbaord-left'>
+        <p>Dashboard</p>
+        <p>Upload Car</p>
+        <p>Profile</p>
+      </div>
+
+      <div className='dasboard-right'>
+
+      </div>
+
     </div>
   )
 }
 
-export default Dashboard;
+export default Dashboard

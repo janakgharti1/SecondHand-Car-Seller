@@ -1,8 +1,7 @@
 import React from 'react';
 import '../App.css';
 import myImage from '../Assests/car.png';
-import Explore from './Explore';
-import Services from './Services';
+import Explore from './ExploreUsedCar';
 import About from './About';
 import Contact from './Contact';
 
@@ -25,12 +24,6 @@ const Home = () => {
   
       <div id='explore-section'>
         <Explore />
-      </div>
-
-    
-      <div id='service-section'>
-        <h2>Our Services</h2>
-        <Services />
       </div>
 
      

@@ -21,15 +21,15 @@ const Navbar = () => {
       </div>
       <div id="mid">
         <Link to="/">Home</Link>
-        <Link to="/explore">Explore</Link>
-        <Link to="/service">Services</Link>
+        <Link to="/usedcar">Explore Used Car</Link>
+        <Link to="/sellcar">Sell Car</Link>
         <Link to="/about">About</Link>
         <Link to="contact">Contact</Link>
       </div>
       <div id="right">
-        {isAuthenticated && <img src={myImage} alt="Logo"/>}
+        {isAuthenticated && <Link to="/dashboard"><img src={myImage} alt="Logo"/></Link>}
         {isAuthenticated ? (
-          <button onClick={handleLogout}>Logout</button>
+          <button id="logoutbtn" onClick={handleLogout}>Logout</button>
         ) : (
           <>
             <Link to="/login">Login</Link>
