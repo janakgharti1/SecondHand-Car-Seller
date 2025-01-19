@@ -4,7 +4,7 @@ import "../Styles/ExploreUsedCar.css";
 
 const ExploreUsedCar = () => {
   const [cars, setCars] = useState([]); // State to hold car data from MongoDB
-  const [search, setSearch] = useState(""); // State to hold search query
+  const [search] = useState(""); // State to hold search query
 
   // Fetch car data from the backend when the component mounts
   useEffect(() => {
@@ -26,25 +26,15 @@ const ExploreUsedCar = () => {
   );
 
   return (
-    <div id="explore">
-      <div id="up">
-        <h2>Explore Used Cars</h2>
-        <input
-          type="text"
-          placeholder="Search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
-
-      <div id="carlist">
+    <div className="explore">
+      <div className="carlist">
         {filteredCars.length > 0 ? (
           filteredCars.map((car) => (
             <div key={car._id} className="car-card">
               <div className="card-header">
                 <span className="car-type">{car.carType.toUpperCase()}</span>
                 <img
-                  src={car.featuredImage ? car.featuredImage : "https://via.placeholder.com/300x200"}
+                  src={car.featuredImage ? `http://localhost:4000/uploads/${car.featuredImage}` : "https://via.placeholder.com/300x200"}
                   alt={car.carName}
                   className="car-image"
                 />

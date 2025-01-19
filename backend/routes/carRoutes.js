@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const { addCar } = require("../controllers/carControllers");
+const { addCar, getAllCars } = require("../controllers/carControllers");
 
 const router = express.Router();
 
@@ -22,5 +22,8 @@ router.post(
   upload.fields([{ name: "featuredImage", maxCount: 1 }, { name: "gallery", maxCount: 8 }]),
   addCar
 );
+
+// Route to fetch all cars
+router.get("/cars", getAllCars);
 
 module.exports = router;
