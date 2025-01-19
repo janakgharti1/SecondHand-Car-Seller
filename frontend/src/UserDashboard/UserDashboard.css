@@ -1,0 +1,80 @@
+/* Container Styles */
+.user-dashboard {
+    display: flex;
+    height: 100vh;
+    font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  }
+  
+  /* Left Sidebar Styles */
+  .user-dashboard-left {
+    width: 250px;
+    background-color: #f4f4f4;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Menu Items */
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #333;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  .menu-item:hover {
+    background-color: #e0e0e0;
+    color: #000;
+  }
+  
+  /* Active Menu Item */
+  .menu-item.active {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: bold;
+  }
+  
+  /* Menu Icon */
+  .menu-icon {
+    font-size: 1.2rem;
+  }
+  
+  /* Right Content Section */
+  .user-dashboard-right {
+    flex: 1;
+    padding: 20px;
+    background-color: #fff;
+    overflow-y: auto;
+  }
+  
+  /* Content Styling */
+  .user-dashboard-right h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .user-dashboard-right p {
+    font-size: 1rem;
+    color: #555;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .user-dashboard {
+      flex-direction: column;
+    }
+  
+    .user-dashboard-left {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+  

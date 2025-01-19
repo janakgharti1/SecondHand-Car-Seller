@@ -27,7 +27,7 @@ const Navbar = () => {
         <Link to="contact">Contact</Link>
       </div>
       <div id="right">
-        {isAuthenticated && <Link to="/dashboard"><img src={myImage} alt="Logo"/></Link>}
+        {isAuthenticated && <Link to="/userdashboard"><img src={myImage} alt="Logo"/></Link>}
         {isAuthenticated ? (
           <button id="logoutbtn" onClick={handleLogout}>Logout</button>
         ) : (

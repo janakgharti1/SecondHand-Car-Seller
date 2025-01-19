@@ -3,7 +3,7 @@ import '../App.css';
 import myImage from '../Assests/car.png';
 import Explore from './ExploreUsedCar';
 import About from './About';
-import Contact from './Contact';
+import Footer from './Footer';
 
 const Home = () => {
   return (
@@ -35,7 +35,7 @@ const Home = () => {
   
       <div id='contact-section'>
         <h2>Contact Us</h2>
-        <Contact />
+        <Footer />
       </div>
     </div>
   );

@@ -7,12 +7,12 @@ import SignUp from "./Components/Signup";
 import ForgetPassword from "./Components/ForgetPassword";
 import Home from "./Components/Home";
 import Navbar from "./Components/Navbar";
-import Dashboard from "./Components/Dashboard"
+import UserDashboard from "./UserDashboard/UserDashboard"
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ExploreUsedCar from "./Components/ExploreUsedCar";
 import SellCar from "./Components/SellCar";
 import About from "./Components/About";
-import Contact from "./Components/Contact";
+import Footer from "./Components/Footer";
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("authToken"));
@@ -27,7 +27,7 @@ function App() {
         <Route path="/usedcar" element={<ExploreUsedCar />} />
         <Route path="/sellcar" element={<SellCar />} />
         <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="/footer" element={<Footer />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/login" element={<Login />} />
@@ -37,7 +37,7 @@ function App() {
         <Route
           element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
         >
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/userdashboard" element={<UserDashboard />} />
         </Route>
       </Routes>
     </Router>
