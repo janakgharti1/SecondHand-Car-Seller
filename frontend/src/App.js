@@ -7,12 +7,15 @@ import SignUp from "./Components/Signup";
 import ForgetPassword from "./Components/ForgetPassword";
 import Home from "./Components/Home";
 import Navbar from "./Components/Navbar";
-import UserDashboard from "./UserDashboard/UserDashboard"
+import UserDashboard from "./UserDashboard/UserDashboard";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ExploreUsedCar from "./Components/ExploreUsedCar";
 import SellCar from "./Components/SellCar";
 import About from "./Components/About";
 import Footer from "./Components/Footer";
+import UploadedCar from "./UserDashboard/UploadedCar";
+import UserProfile from "./UserDashboard/UserProfile";
+import Welcome from "./UserDashboard/Welcome";
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("authToken"));
@@ -21,7 +24,6 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/usedcar" element={<ExploreUsedCar />} />
@@ -32,12 +34,16 @@ function App() {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/login" element={<Login />} />
 
-
         {/* Protected Routes */}
         <Route
           element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
         >
-          <Route path="/userdashboard" element={<UserDashboard />} />
+          <Route path="/userdashboard" element={<UserDashboard />}>
+            {/* Nested Routes for Dashboard */}
+            <Route path="dashboard" element={<Welcome />} />
+            <Route path="uploaded-cars" element={<UploadedCar />} />
+            <Route path="profile" element={<UserProfile />} />
+          </Route>
         </Route>
       </Routes>
     </Router>

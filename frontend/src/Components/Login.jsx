@@ -3,6 +3,8 @@ import "../Styles/Login.css";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import { doc, getDoc } from "firebase/firestore"; // Import Firestore functions
+import { db } from "../firebase"; // Firestore instance
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -24,8 +26,17 @@ const Login = () => {
       const token = await user.getIdToken();
       localStorage.setItem("authToken", token);
 
+      // Fetch user's name from Firestore
+      const userDoc = await getDoc(doc(db, "user", user.uid));
+      if (userDoc.exists()) {
+        const userName = userDoc.data().name;
+        localStorage.setItem("userName", userName); // Store name in localStorage
+      } else {
+        localStorage.setItem("userName", "User"); // Fallback if no name is found
+      }
+
       setLoading(false);
-      navigate("/"); // Redirect to a protected page
+      navigate("/userdashboard/dashboard"); // Redirect to Welcome page
     } catch (err) {
       setError("Invalid credentials. Please try again.");
       console.error(err);
@@ -82,4 +93,3 @@ const Login = () => {
 };
 
 export default Login;
-

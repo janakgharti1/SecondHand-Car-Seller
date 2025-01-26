@@ -78,3 +78,13 @@
     }
   }
   
+  .menu-link {
+    text-decoration: none;
+    color: black;
+  }
+  
+  .menu-link.active {
+    font-weight: bold;
+    color: blue;
+  }
+  

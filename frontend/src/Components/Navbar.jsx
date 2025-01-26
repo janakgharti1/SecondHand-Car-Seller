@@ -21,9 +21,9 @@ const Navbar = () => {
       </div>
       <div id="mid">
         <Link to="/">Home</Link>
-        <Link to="/usedcar">Explore Used Car</Link>
+        <Link to="/usedcar">Explore Car</Link>
         <Link to="/sellcar">Sell Car</Link>
-        <Link to="/about">About</Link>
+        <Link to="/about">Compare Car</Link>
         <Link to="contact">Contact</Link>
       </div>
       <div id="right">

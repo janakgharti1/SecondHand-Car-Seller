@@ -1,41 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
+import { NavLink, Outlet } from "react-router-dom";
 import "../UserDashboard/UserDashboard.css";
-import Welcome from "./Welcome";
-import UploadedCar from "./UploadedCar";
-import UserProfile from "./UserProfile";
 
 const UserDashboard = () => {
-  const [activePage, setActivePage] = useState("dashboard");
-
-  const renderContent = () => {
-    switch (activePage) {
-      case "dashboard":
-        return <Welcome />;
-      case "uploaded-cars":
-        return <UploadedCar />;
-      case "profile":
-        return <UserProfile />;
-      default:
-        return <UserProfile />;
-    }
-  };
-
   return (
     <div className="user-dashboard">
+      {/* Sidebar */}
       <div className="user-dashboard-left">
-        <div className={`menu-item ${activePage === "dashboard" ? "active" : ""}`} onClick={() => setActivePage("dashboard")}>
-          <span className="menu-icon">⬛</span> Welcome
+        <div className="menu-item">
+          <NavLink
+            to="dashboard"
+            className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
+          >
+             Welcome
+          </NavLink>
         </div>
-        <div className={`menu-item ${activePage === "uploaded-cars" ? "active" : ""}`} onClick={() => setActivePage("uploaded-cars")}>
-          <span className="menu-icon">👥</span> My Uploaded Car
+        <div className="menu-item">
+          <NavLink
+            to="uploaded-cars"
+            className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
+          >
+             My Uploaded Car
+          </NavLink>
         </div>
-        <div className={`menu-item ${activePage === "profile" ? "active" : ""}`} onClick={() => setActivePage("profile")}>
-          <span className="menu-icon">👤</span> Profile
+        <div className="menu-item">
+          <NavLink
+            to="profile"
+            className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
+          >
+             Profile
+          </NavLink>
         </div>
       </div>
 
+      {/* Main Content */}
       <div className="user-dashboard-right">
-        {renderContent()}
+        <Outlet />
       </div>
     </div>
   );
