@@ -56,24 +56,24 @@ const SellCar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Validate at least two images in the gallery
     const galleryImages = formData.gallery.filter((file) => file !== null);
     if (galleryImages.length < 2) {
       setMessage("At least 2 gallery images are required.");
       return;
     }
-  
+
     // Check if the user is authenticated
     if (!userUID) {
       setMessage("Please log in to submit the car details.");
       return;
     }
-  
+
     try {
       // Get Firebase authentication token
       const token = await auth.currentUser.getIdToken();
-  
+
       // Create FormData object
       const uploadData = new FormData();
       Object.keys(formData).forEach((key) => {
@@ -91,10 +91,10 @@ const SellCar = () => {
           uploadData.append(key, formData[key]);
         }
       });
-  
+
       // Add the user UID to the FormData
       uploadData.append("userId", userUID);
-  
+
       // Make API request with the token in headers
       const response = await axios.post("http://localhost:4000/api/cars", uploadData, {
         headers: {
@@ -102,55 +102,73 @@ const SellCar = () => {
           Authorization: `Bearer ${token}`, // Include token here
         },
       });
-  
+
       setMessage(response.data.message || "Car details uploaded successfully!");
     } catch (err) {
       console.error(err);
       setMessage("Error uploading car details.");
     }
-  };  
+  };
 
   return (
     <div className="sell-car-container">
       <form className="sell-car-form" onSubmit={handleSubmit}>
         <h2>SELL YOUR CAR</h2>
         <div className="form-row">
+          <label>
+            <i className="fa fa-car"></i> Brand
+          </label>
           <select name="brand" value={formData.brand} onChange={handleInputChange}>
-            <option value="">Brand</option>
+            <option value="">Select Brand</option>
             <option value="Toyota">Toyota</option>
             <option value="Honda">Honda</option>
             <option value="Ford">Ford</option>
           </select>
+
+          <label>
+            <i className="fa fa-car-side"></i> Car Type
+          </label>
           <select name="carType" value={formData.carType} onChange={handleInputChange}>
-            <option value="">Car Type</option>
+            <option value="">Select Car Type</option>
             <option value="SUV">SUV</option>
             <option value="Sedan">Sedan</option>
             <option value="Hatchback">Hatchback</option>
           </select>
-          <select
-            name="transmission"
-            value={formData.transmission}
-            onChange={handleInputChange}
-          >
-            <option value="">Transmission</option>
+
+          <label>
+            <i className="fa fa-cogs"></i> Transmission
+          </label>
+          <select name="transmission" value={formData.transmission} onChange={handleInputChange}>
+            <option value="">Select Transmission</option>
             <option value="Manual">Manual</option>
             <option value="Automatic">Automatic</option>
           </select>
         </div>
 
         <div className="form-row">
+          <label>
+            <i className="fa fa-gas-pump"></i> Fuel Type
+          </label>
           <select name="fuelType" value={formData.fuelType} onChange={handleInputChange}>
-            <option value="">Fuel Type</option>
+            <option value="">Select Fuel Type</option>
             <option value="Petrol">Petrol</option>
             <option value="Diesel">Diesel</option>
           </select>
+
+          <label>
+            <i className="fa fa-calendar-alt"></i> Car Year
+          </label>
           <input
             type="number"
             name="carYear"
-            placeholder="Car Year"
+            placeholder="Year"
             value={formData.carYear}
             onChange={handleInputChange}
           />
+
+          <label>
+            <i className="fa fa-user"></i> Ownership
+          </label>
           <input
             type="text"
             name="ownership"
@@ -161,6 +179,9 @@ const SellCar = () => {
         </div>
 
         <div className="form-row">
+          <label>
+            <i className="fa fa-car"></i> Car Name
+          </label>
           <input
             type="text"
             name="carName"
@@ -168,6 +189,10 @@ const SellCar = () => {
             value={formData.carName}
             onChange={handleInputChange}
           />
+
+          <label>
+            <i className="fa fa-road"></i> Kms Driven
+          </label>
           <input
             type="number"
             name="kmsDriven"
@@ -175,6 +200,10 @@ const SellCar = () => {
             value={formData.kmsDriven}
             onChange={handleInputChange}
           />
+
+          <label>
+           <i className="fa fa-coins"></i>  Price
+          </label>
           <input
             type="number"
             name="price"
@@ -185,11 +214,18 @@ const SellCar = () => {
         </div>
 
         <div className="form-row">
+          <label>
+            <i className="fa fa-map-marker-alt"></i> Location
+          </label>
           <select name="location" value={formData.location} onChange={handleInputChange}>
-            <option value="">Location</option>
+            <option value="">Select Location</option>
             <option value="Kathmandu">Kathmandu</option>
             <option value="Lalitpur">Lalitpur</option>
           </select>
+
+          <label>
+            <i className="fa fa-cogs"></i> Engine
+          </label>
           <input
             type="text"
             name="engine"
@@ -207,7 +243,9 @@ const SellCar = () => {
         ></textarea>
 
         <div className="file-upload">
-          <label>Featured Image for Listing</label>
+          <label>
+            <i className="fa fa-image"></i> Featured Image
+          </label>
           <input type="file" onChange={(e) => handleFileChange(e)} />
         </div>
 
