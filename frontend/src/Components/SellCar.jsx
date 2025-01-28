@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../Styles/SellCar.css";
+import { auth } from "../firebase"; // Import your Firebase config file
+import { onAuthStateChanged } from "firebase/auth"; // Import auth state listener
 
 const SellCar = () => {
   const [formData, setFormData] = useState({
@@ -21,6 +23,21 @@ const SellCar = () => {
   });
 
   const [message, setMessage] = useState("");
+  const [userUID, setUserUID] = useState(null); // Store the user's UID
+
+  // Get user UID on component mount
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserUID(user.uid); // Set the UID if the user is authenticated
+      } else {
+        setMessage("User not authenticated.");
+      }
+    });
+
+    // Cleanup subscription on component unmount
+    return () => unsubscribe();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -39,42 +56,59 @@ const SellCar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Validate at least two images in the gallery
     const galleryImages = formData.gallery.filter((file) => file !== null);
     if (galleryImages.length < 2) {
       setMessage("At least 2 gallery images are required.");
       return;
     }
-
-    // Create FormData object
-    const uploadData = new FormData();
-    Object.keys(formData).forEach((key) => {
-      if (key === "gallery") {
-        formData.gallery.forEach((file, index) => {
-          if (file) {
-            uploadData.append(`gallery`, file);
-          }
-        });
-      } else if (key === "featuredImage") {
-        if (formData.featuredImage) {
-          uploadData.append("featuredImage", formData.featuredImage);
-        }
-      } else {
-        uploadData.append(key, formData[key]);
-      }
-    });
-
+  
+    // Check if the user is authenticated
+    if (!userUID) {
+      setMessage("Please log in to submit the car details.");
+      return;
+    }
+  
     try {
-      const response = await axios.post("http://localhost:4000/api/cars", uploadData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // Get Firebase authentication token
+      const token = await auth.currentUser.getIdToken();
+  
+      // Create FormData object
+      const uploadData = new FormData();
+      Object.keys(formData).forEach((key) => {
+        if (key === "gallery") {
+          formData.gallery.forEach((file, index) => {
+            if (file) {
+              uploadData.append(`gallery`, file);
+            }
+          });
+        } else if (key === "featuredImage") {
+          if (formData.featuredImage) {
+            uploadData.append("featuredImage", formData.featuredImage);
+          }
+        } else {
+          uploadData.append(key, formData[key]);
+        }
       });
+  
+      // Add the user UID to the FormData
+      uploadData.append("userId", userUID);
+  
+      // Make API request with the token in headers
+      const response = await axios.post("http://localhost:4000/api/cars", uploadData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`, // Include token here
+        },
+      });
+  
       setMessage(response.data.message || "Car details uploaded successfully!");
     } catch (err) {
       console.error(err);
       setMessage("Error uploading car details.");
     }
-  };
+  };  
 
   return (
     <div className="sell-car-container">
@@ -203,4 +237,3 @@ const SellCar = () => {
 };
 
 export default SellCar;
-

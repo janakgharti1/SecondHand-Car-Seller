@@ -22,12 +22,19 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
+      // Check if the user's email is verified
+      if (!user.emailVerified) {
+        setError("Your email is not verified. Please check your inbox and verify your email.");
+        setLoading(false);
+        return;
+      }
+
       // Get and store auth token
       const token = await user.getIdToken();
       localStorage.setItem("authToken", token);
 
       // Fetch user's name from Firestore
-      const userDoc = await getDoc(doc(db, "user", user.uid));
+      const userDoc = await getDoc(doc(db, "users", user.uid)); // Corrected to "users"
       if (userDoc.exists()) {
         const userName = userDoc.data().name;
         localStorage.setItem("userName", userName); // Store name in localStorage
@@ -36,7 +43,7 @@ const Login = () => {
       }
 
       setLoading(false);
-      navigate("/userdashboard/dashboard"); // Redirect to Welcome page
+      navigate("/"); // Redirect to home page
     } catch (err) {
       setError("Invalid credentials. Please try again.");
       console.error(err);

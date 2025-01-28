@@ -11,7 +11,10 @@ const addCar = async (req, res) => {
       return res.status(400).json({ message: "At least 2 gallery images are required." });
     }
 
+    const userId = req.user.uid; // Fetch Firebase UID from request
+
     const car = new Car({
+      userId,
       ...body,
       featuredImage,
       gallery,
@@ -25,15 +28,27 @@ const addCar = async (req, res) => {
   }
 };
 
-// Get all cars
+// Get cars for the authenticated user
+const getUserCars = async (req, res) => {
+  try {
+    const userId = req.user.uid;
+    const userCars = await Car.find({ userId });
+    res.status(200).json(userCars);
+  } catch (error) {
+    console.error("Error fetching user cars:", error);
+    res.status(500).json({ message: "Failed to fetch user cars." });
+  }
+};
+
+// Get all cars (for admins, testing, etc.)
 const getAllCars = async (req, res) => {
   try {
-    const cars = await Car.find(); // Fetch all cars from MongoDB
-    res.status(200).json(cars); // Send cars as a response
+    const cars = await Car.find();
+    res.status(200).json(cars);
   } catch (error) {
     console.error("Error fetching cars:", error);
     res.status(500).json({ message: "Failed to fetch cars" });
   }
 };
 
-module.exports = { addCar, getAllCars };
+module.exports = { addCar, getUserCars, getAllCars };

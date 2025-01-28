@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const carSchema = new mongoose.Schema({
+  userId: { type: String, required: true }, // Store Firebase UID to link with the user
   brand: String,
   carType: String,
   transmission: String,

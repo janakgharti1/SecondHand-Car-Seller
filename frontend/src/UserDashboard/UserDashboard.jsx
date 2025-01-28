@@ -9,7 +9,7 @@ const UserDashboard = () => {
       <div className="user-dashboard-left">
         <div className="menu-item">
           <NavLink
-            to="dashboard"
+            to=""
             className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
           >
              Welcome

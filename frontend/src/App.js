@@ -40,7 +40,7 @@ function App() {
         >
           <Route path="/userdashboard" element={<UserDashboard />}>
             {/* Nested Routes for Dashboard */}
-            <Route path="dashboard" element={<Welcome />} />
+            <Route index element={<Welcome />} />
             <Route path="uploaded-cars" element={<UploadedCar />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>

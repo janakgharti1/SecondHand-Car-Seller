@@ -21,7 +21,7 @@ const UserProfile = () => {
     try {
       const user = auth.currentUser;
       if (user) {
-        const userDoc = await getDoc(doc(db, "user", user.uid));
+        const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           setUserData(userDoc.data());
           localStorage.setItem("userName", userDoc.data().name); // Sync name with localStorage
@@ -51,7 +51,7 @@ const UserProfile = () => {
     try {
       const user = auth.currentUser;
       if (user) {
-        await updateDoc(doc(db, "user", user.uid), userData);
+        await updateDoc(doc(db, "users", user.uid), userData);
         localStorage.setItem("userName", userData.name); // Update localStorage when saving changes
         setSuccess("Profile updated successfully!");
         setIsEditing(false);

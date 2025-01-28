@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth, googleProvider } from "../firebase";
-import { db } from "../firebase"; // Firestore instance
-import { doc, setDoc } from "firebase/firestore"; // Firestore functions
-import myImage from "../Assests/google.png";
+import { db } from "../firebase"; // Import Firestore instance
+import { doc, setDoc } from "firebase/firestore"; // Import Firestore functions
 import "../Styles/Signup.css";
 import Popup from "./Popup";
 
@@ -20,20 +23,12 @@ const SignUp = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const navigate = useNavigate();
 
-  const saveUserToFirestore = async (uid, data) => {
-    try {
-      await setDoc(doc(db, "user", uid), data); // Save user data in Firestore
-    } catch (err) {
-      console.error("Error saving user to Firestore:", err);
-      throw new Error("Failed to save user data.");
-    }
-  };
-
   const handleSignUp = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
+    // Validation checks
     if (!name.trim()) {
       setError("Name cannot be empty.");
       setLoading(false);
@@ -81,17 +76,31 @@ const SignUp = () => {
       // Create user with Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const { user } = userCredential;
-
-      // Save user data in Firestore
-      await saveUserToFirestore(user.uid, {
+    
+      // Send email verification
+      await sendEmailVerification(user);
+    
+      // Store user details in Firestore
+      const userDoc = {
         name,
         email,
         gender,
         dob,
-      });
-
-      setPopupMessage("New User Registered Successfully!");
-      setTimeout(() => navigate("/login"), 2000); // Redirect after 2 seconds
+        createdAt: new Date().toISOString(),
+      };
+    
+      await setDoc(doc(db, "users", user.uid), userDoc);
+    
+      // Save the user name to localStorage
+      localStorage.setItem("userName", name);
+    
+      // Inform the user
+      setPopupMessage(
+        "A verification email has been sent to your email address. Please verify your email before logging in."
+      );
+    
+      // Redirect to login page after a delay
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       console.error("Error during sign up:", err);
       if (err.code === "auth/email-already-in-use") {
@@ -99,6 +108,7 @@ const SignUp = () => {
       } else {
         setError("Failed to sign up. Please try again.");
       }
+    } finally {
       setLoading(false);
     }
   };
@@ -107,21 +117,27 @@ const SignUp = () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
       const { user } = result;
-
-      // Save user data in Firestore
-      await saveUserToFirestore(user.uid, {
-        name: user.displayName || "Anonymous",
+    
+      // Store user details in Firestore for Google sign-up
+      const userDoc = {
+        name: user.displayName,
         email: user.email,
-        gender: "Not Specified",
-        dob: "Not Specified",
-      });
-
+        gender: "Not specified",
+        dob: "Not specified",
+        createdAt: new Date().toISOString(),
+      };
+    
+      await setDoc(doc(db, "users", user.uid), userDoc);
+    
+      // Save the Google user name to localStorage
+      localStorage.setItem("userName", user.displayName);
+    
       setPopupMessage("Sign up successful with Google!");
       setTimeout(() => navigate("/login"), 2000); // Redirect after 2 seconds
     } catch (err) {
       console.error("Error during Google Sign-In:", err);
       setError("Failed to sign up with Google. Please try again.");
-    }
+    }    
   };
 
   return (
@@ -169,7 +185,7 @@ const SignUp = () => {
             {loading ? "Signing Up..." : "Sign Up"}
           </button>
           <button onClick={handleGoogleSignUp} className="google-signup">
-            <img src={myImage} alt="Google Icon" />
+            <img src="../Assests/google.png" alt="Google Icon" />
             <p>Sign Up with Google</p>
           </button>
         </div>
