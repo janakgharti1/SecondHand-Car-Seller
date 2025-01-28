@@ -11,7 +11,7 @@
 
 .car-card {
   border: 1px solid #ddd;
-  border-radius: 8px; /* Slightly smaller corners */
+  border-radius: 5px; /* Slightly smaller corners */
   overflow: hidden;
   background-color: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -57,4 +57,25 @@
 
 .view-details-btn:hover {
   background-color: #0056b3;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-bar, .dropdown, .price-input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.price-input {
+  width: 100px;
+}
+
+.search-bar {
+  flex: 1;
 }
