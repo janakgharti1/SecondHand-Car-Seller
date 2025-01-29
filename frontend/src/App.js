@@ -17,6 +17,13 @@ import Footer from "./Components/Footer";
 import UploadedCar from "./UserDashboard/UploadedCar";
 import UserProfile from "./UserDashboard/UserProfile";
 import Welcome from "./UserDashboard/Welcome";
+import AdminDashboard from "./Admin/AdminDashboard";
+import AuctionManagement from "./Admin/AuctionManagement";
+import CarListingManagement from "./Admin/CarListingManagement";
+import ComparisonInsights from "./Admin/ComparisonInsights";
+import UserManagement from "./Admin/UserManagement";
+import ReportsAnalytics from "./Admin/ReportsAnalytics";
+import DashboardOverview from "./Admin/DashboardOverview";
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("authToken"));
@@ -45,6 +52,17 @@ function App() {
             <Route path="uploaded-cars" element={<UploadedCar />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
+
+          <Route path="/admindashboard" element={<AdminDashboard />}>
+            {/* Nested Routes for Admin Dashboard */}
+            <Route index element={<DashboardOverview />} />
+            <Route path="user-management" element={<UserManagement />} />
+            <Route path="car-listings" element={<CarListingManagement />} />
+            <Route path="auction-management" element={<AuctionManagement />} />
+            <Route path="comparison-insights" element={<ComparisonInsights />} />
+            <Route path="reports-analytics" element={<ReportsAnalytics />} />
+          </Route>
+
         </Route>
       </Routes>
     </Router>

@@ -9,10 +9,10 @@ const UserDashboard = () => {
       <div className="user-dashboard-left">
         <div className="menu-item">
           <NavLink
-            to=""
+            to="welcome"
             className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
           >
-             Welcome
+            <i className="fa fa-home"></i> Welcome
           </NavLink>
         </div>
         <div className="menu-item">
@@ -20,7 +20,7 @@ const UserDashboard = () => {
             to="uploaded-cars"
             className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
           >
-             My Uploaded Car
+            <i className="fa fa-car"></i> My Uploaded Car
           </NavLink>
         </div>
         <div className="menu-item">
@@ -28,7 +28,7 @@ const UserDashboard = () => {
             to="profile"
             className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
           >
-             Profile
+            <i className="fa fa-user"></i> Profile
           </NavLink>
         </div>
       </div>
