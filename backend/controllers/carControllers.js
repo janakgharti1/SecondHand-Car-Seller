@@ -51,4 +51,46 @@ const getAllCars = async (req, res) => {
   }
 };
 
-module.exports = { addCar, getUserCars, getAllCars };
+const deleteCar = async (req, res) => {
+  try {
+    const carId = req.params.id;
+    const deletedCar = await Car.findByIdAndDelete(carId);
+
+    if (!deletedCar) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+
+    res.status(200).json({ message: "Car deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting car:", error);
+    res.status(500).json({ message: "Failed to delete car" });
+  }
+};
+
+const updateCar = async (req, res) => {
+  try {
+    const carId = req.params.id;
+    const { body, files } = req;
+    const featuredImage = files?.featuredImage ? files.featuredImage[0].filename : null;
+    const gallery = files?.gallery ? files.gallery.map((file) => file.filename) : [];
+
+    const updatedCarData = { ...body };
+    
+    if (featuredImage) updatedCarData.featuredImage = featuredImage;
+    if (gallery.length > 0) updatedCarData.gallery = gallery;
+
+    const updatedCar = await Car.findByIdAndUpdate(carId, updatedCarData, { new: true });
+
+    if (!updatedCar) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+
+    res.status(200).json({ message: "Car updated successfully", updatedCar });
+  } catch (error) {
+    console.error("Error updating car:", error);
+    res.status(500).json({ message: "Failed to update car" });
+  }
+};
+
+
+module.exports = { addCar, getUserCars, getAllCars, deleteCar, updateCar };

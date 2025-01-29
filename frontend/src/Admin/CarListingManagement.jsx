@@ -39,11 +39,15 @@ const CarListingsManagement = () => {
     e.preventDefault();
     try {
       if (editingCarId) {
+        // If editing, PUT request to update the car
         await axios.put(`http://localhost:4000/api/cars/${editingCarId}`, formData);
+        alert("Car updated successfully");
       } else {
+        // If adding, POST request to add the car
         await axios.post("http://localhost:4000/api/cars", formData);
+        alert("Car added successfully");
       }
-      fetchCars();
+      fetchCars(); // Fetch updated list of cars
       setFormData({
         carName: "",
         carType: "",
@@ -56,13 +60,14 @@ const CarListingsManagement = () => {
       setEditingCarId(null);
     } catch (error) {
       console.error("Error saving car:", error);
+      alert("Error saving car");
     }
   };
 
   // Handle edit button click
   const handleEdit = (car) => {
-    setFormData(car);
-    setEditingCarId(car._id);
+    setFormData(car); // Pre-fill the form with car data
+    setEditingCarId(car._id); // Set car ID for update
   };
 
   // Handle delete button click
@@ -72,6 +77,7 @@ const CarListingsManagement = () => {
       fetchCars();
     } catch (error) {
       console.error("Error deleting car:", error);
+      alert("Error deleting car");
     }
   };
 
