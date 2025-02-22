@@ -33,17 +33,24 @@ const Login = () => {
       const token = await user.getIdToken();
       localStorage.setItem("authToken", token);
 
-      // Fetch user's name from Firestore
-      const userDoc = await getDoc(doc(db, "users", user.uid)); // Corrected to "users"
+      // Fetch user's data from Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
       if (userDoc.exists()) {
-        const userName = userDoc.data().name;
-        localStorage.setItem("userName", userName); // Store name in localStorage
+        const userData = userDoc.data();
+        localStorage.setItem("userName", userData.name || "User"); // Store name in localStorage
+        localStorage.setItem("userRole", userData.role || "User"); // Store role in localStorage
+
+        // Redirect based on role
+        if (userData.role === "Admin") {
+          navigate("/admindashboard"); // Redirect to Admin Dashboard
+        } else {
+          navigate("/"); // Redirect to Home Page
+        }
       } else {
-        localStorage.setItem("userName", "User"); // Fallback if no name is found
+        setError("User data not found. Please contact support.");
       }
 
       setLoading(false);
-      navigate("/"); // Redirect to home page
     } catch (err) {
       setError("Invalid credentials. Please try again.");
       console.error(err);

@@ -42,17 +42,18 @@ function App() {
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/login" element={<Login />} />
 
-        {/* Protected Routes */}
-        <Route
-          element={<ProtectedRoute isAuthenticated={isAuthenticated} />}
-        >
+        {/* Protected Routes for Users */}
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="User" />}>
           <Route path="/userdashboard" element={<UserDashboard />}>
             {/* Nested Routes for Dashboard */}
             <Route index element={<Welcome />} />
             <Route path="uploaded-cars" element={<UploadedCar />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
+        </Route>
 
+        {/* Protected Routes for Admins */}
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="Admin" />}>
           <Route path="/admindashboard" element={<AdminDashboard />}>
             {/* Nested Routes for Admin Dashboard */}
             <Route index element={<DashboardOverview />} />
@@ -62,8 +63,8 @@ function App() {
             <Route path="comparison-insights" element={<ComparisonInsights />} />
             <Route path="reports-analytics" element={<ReportsAnalytics />} />
           </Route>
-
         </Route>
+
       </Routes>
     </Router>
   );
