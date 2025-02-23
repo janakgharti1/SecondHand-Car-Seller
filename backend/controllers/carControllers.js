@@ -92,5 +92,17 @@ const updateCar = async (req, res) => {
   }
 };
 
+// Get a single car by ID
+const getCarById = async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (!car) {
+      return res.status(404).json({ message: "Car not found" });
+    }
+    res.json(car);
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 
-module.exports = { addCar, getUserCars, getAllCars, deleteCar, updateCar };
+module.exports = { addCar, getUserCars, getAllCars, deleteCar, updateCar, getCarById};

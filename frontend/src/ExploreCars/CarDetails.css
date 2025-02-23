@@ -1,0 +1,101 @@
+.car-details {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Back Button */
+.car-details .back-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  align-self: flex-start;
+}
+
+.car-details .back-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Car Details */
+.car-details h2 {
+  color: #333;
+  text-align: center;
+}
+
+.car-details p {
+  font-size: 16px;
+  color: #555;
+  margin: 5px 0;
+}
+
+.car-details .car-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #d9534f;
+}
+
+/* Flexbox for Layout */
+.car-details .details-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.car-details .left-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.car-details .right-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+/* Image Gallery */
+.car-details .gallery {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.car-details .car-image {
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+/* Seller & Inspection Section */
+.car-details .seller-info,
+.car-details .inspection-report {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+  border-left: 5px solid #007bff;
+}
+
+/* Buy Now Button */
+.car-details .buy-now-btn {
+  width: 100%;
+  background-color: #1990ff;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.car-details .buy-now-btn:hover {
+  background-color: #0355a1;
+}
+

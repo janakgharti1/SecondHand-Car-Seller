@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Styles/ExploreUsedCar.css";
 
 const ExploreUsedCar = () => {
+  const navigate = useNavigate();
   const [cars, setCars] = useState([]); // State to hold car data
   const [search, setSearch] = useState(""); // State for search query
   const [carTypeFilter, setCarTypeFilter] = useState(""); // State for car type filter
@@ -116,7 +118,7 @@ const ExploreUsedCar = () => {
                 </p>
                 <p className="car-price">Price: NPR {car.price} lakhs</p>
               </div>
-              <button className="view-details-btn">View More Details</button>
+              <button className="view-details-btn" onClick={() => navigate(`/car/${car._id}`)}>View More Details</button>
             </div>
           ))
         ) : (

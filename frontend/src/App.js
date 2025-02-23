@@ -24,6 +24,7 @@ import ComparisonInsights from "./Admin/ComparisonInsights";
 import UserManagement from "./Admin/UserManagement";
 import ReportsAnalytics from "./Admin/ReportsAnalytics";
 import DashboardOverview from "./Admin/DashboardOverview";
+import CarDetails from "./ExploreCars/CarDetails";
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("authToken"));
@@ -35,6 +36,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/usedcar" element={<ExploreUsedCar />} />
+        <Route path="/car/:id" element={<CarDetails />} />
         <Route path="/sellcar" element={<SellCar />} />
         <Route path="/about" element={<About />} />
         <Route path="/footer" element={<Footer />} />

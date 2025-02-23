@@ -1,6 +1,6 @@
 const express = require("express");
 const multer = require("multer");
-const { addCar, getUserCars, getAllCars, deleteCar, updateCar } = require("../controllers/carControllers");
+const { addCar, getUserCars, getAllCars, deleteCar, updateCar,getCarById } = require("../controllers/carControllers");
 const { authenticateUser } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
@@ -32,5 +32,7 @@ router.get("/cars", getAllCars); // Fetch all cars (testing or admin)
 router.delete("/cars/:id", deleteCar); //deletecar
 
 router.put("/cars/:id", updateCar); //Update cars
+
+router.get("/cars/:id", getCarById); // Fetch a single car by ID
 
 module.exports = router;
