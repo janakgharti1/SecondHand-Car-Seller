@@ -7,14 +7,16 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       {/* Sidebar */}
       <div className="admin-dashboard-left">
-        <div className="menu-item">
+        {/* later */}
+        {/* <div className="menu-item">
           <NavLink
             to=""
             className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
           >
             <i className="fa fa-tachometer-alt"></i> Dashboard Overview
           </NavLink>
-        </div>
+        </div> */} 
+
         <div className="menu-item">
           <NavLink
             to="user-management"

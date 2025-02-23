@@ -7,14 +7,15 @@ const UserDashboard = () => {
     <div className="user-dashboard">
       {/* Sidebar */}
       <div className="user-dashboard-left">
-        <div className="menu-item">
+        {/* later */}
+        {/* <div className="menu-item">
           <NavLink
             to=""
             className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
           >
             <i className="fa fa-home"></i> Welcome
           </NavLink>
-        </div>
+        </div> */}
         <div className="menu-item">
           <NavLink
             to="uploaded-cars"

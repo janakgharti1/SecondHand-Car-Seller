@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import Login from "./Components/Login";
@@ -31,7 +31,22 @@ function App() {
 
   return (
     <Router>
-      <Navbar />
+      <AppLayout isAuthenticated={isAuthenticated} />
+    </Router>
+  );
+}
+
+const AppLayout = ({ isAuthenticated }) => {
+  const location = useLocation();
+
+  // Define routes where Navbar should be hidden
+  const hideNavbarRoutes = ["/admindashboard", "/admindashboard/user-management", "/admindashboard/car-listings", "/admindashboard/auction-management", "/admindashboard/comparison-insights", "/admindashboard/reports-analytics"];
+
+  return (
+    <>
+      {/* Show Navbar only if the current path is not in hideNavbarRoutes */}
+      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -47,7 +62,6 @@ function App() {
         {/* Protected Routes for Users */}
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="User" />}>
           <Route path="/userdashboard" element={<UserDashboard />}>
-            {/* Nested Routes for Dashboard */}
             <Route index element={<Welcome />} />
             <Route path="uploaded-cars" element={<UploadedCar />} />
             <Route path="profile" element={<UserProfile />} />
@@ -57,7 +71,6 @@ function App() {
         {/* Protected Routes for Admins */}
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="Admin" />}>
           <Route path="/admindashboard" element={<AdminDashboard />}>
-            {/* Nested Routes for Admin Dashboard */}
             <Route index element={<DashboardOverview />} />
             <Route path="user-management" element={<UserManagement />} />
             <Route path="car-listings" element={<CarListingManagement />} />
@@ -68,8 +81,8 @@ function App() {
         </Route>
 
       </Routes>
-    </Router>
+    </>
   );
-}
+};
 
 export default App;

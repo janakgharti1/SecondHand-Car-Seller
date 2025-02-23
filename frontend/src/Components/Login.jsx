@@ -38,7 +38,7 @@ const Login = () => {
       if (userDoc.exists()) {
         const userData = userDoc.data();
         localStorage.setItem("userName", userData.name || "User"); // Store name in localStorage
-        localStorage.setItem("userRole", userData.role || "User"); // Store role in localStorage
+        localStorage.setItem("userRole", userData.role || "user"); // Store role in localStorage
 
         // Redirect based on role
         if (userData.role === "Admin") {
