@@ -2,8 +2,8 @@ import React from 'react';
 import '../App.css';
 import myImage from '../Assests/car.png';
 import Explore from './ExploreUsedCar';
-import About from './About';
 import Footer from './Footer';
+import CompareCar from './CompareCar';
 
 const Home = () => {
   return (
@@ -28,8 +28,8 @@ const Home = () => {
 
      
       <div id='about-section'>
-        <h2>About Us</h2>
-        <About />
+        <h2>Compare Car</h2>
+        <CompareCar />
       </div>
 
   

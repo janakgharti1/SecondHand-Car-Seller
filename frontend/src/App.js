@@ -12,7 +12,7 @@ import UserDashboard from "./UserDashboard/UserDashboard";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ExploreUsedCar from "./Components/ExploreUsedCar";
 import SellCar from "./Components/SellCar";
-import About from "./Components/About";
+import CompareCar from "./Components/CompareCar";
 import Footer from "./Components/Footer";
 import UploadedCar from "./UserDashboard/UploadedCar";
 import UserProfile from "./UserDashboard/UserProfile";
@@ -53,7 +53,7 @@ const AppLayout = ({ isAuthenticated }) => {
         <Route path="/usedcar" element={<ExploreUsedCar />} />
         <Route path="/car/:id" element={<CarDetails />} />
         <Route path="/sellcar" element={<SellCar />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/comparecar" element={<CompareCar />} />
         <Route path="/footer" element={<Footer />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget-password" element={<ForgetPassword />} />

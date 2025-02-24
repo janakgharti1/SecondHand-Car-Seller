@@ -105,4 +105,60 @@ const getCarById = async (req, res) => {
   }
 };
 
-module.exports = { addCar, getUserCars, getAllCars, deleteCar, updateCar, getCarById};
+// Compare two cars
+const compareCars = async (req, res) => {
+  try {
+    const { car1, car2 } = req.query;
+
+    if (!car1 || !car2) {
+      return res.status(400).json({ message: "Please provide two car IDs for comparison." });
+    }
+
+    // Fetch the cars from the database
+    const cars = await Car.find({ _id: { $in: [car1, car2] } });
+
+    if (cars.length !== 2) {
+      return res.status(404).json({ message: "One or both cars not found." });
+    }
+
+    // Structure the response with key attributes for comparison
+    const [firstCar, secondCar] = cars;
+    const comparison = {
+      car1: {
+        id: firstCar._id,
+        name: firstCar.name,
+        price: firstCar.price,
+        brand: firstCar.brand,
+        model: firstCar.model,
+        year: firstCar.year,
+        mileage: firstCar.mileage,
+        fuelType: firstCar.fuelType,
+        transmission: firstCar.transmission,
+        engine: firstCar.engine,
+        horsepower: firstCar.horsepower,
+        featuredImage: firstCar.featuredImage,
+      },
+      car2: {
+        id: secondCar._id,
+        name: secondCar.name,
+        price: secondCar.price,
+        brand: secondCar.brand,
+        model: secondCar.model,
+        year: secondCar.year,
+        mileage: secondCar.mileage,
+        fuelType: secondCar.fuelType,
+        transmission: secondCar.transmission,
+        engine: secondCar.engine,
+        horsepower: secondCar.horsepower,
+        featuredImage: secondCar.featuredImage,
+      },
+    };
+
+    res.status(200).json(comparison);
+  } catch (error) {
+    console.error("Error comparing cars:", error);
+    res.status(500).json({ message: "Error comparing cars.", error: error.message });
+  }
+};
+
+module.exports = { addCar, getUserCars, getAllCars, deleteCar, updateCar, getCarById, compareCars};
