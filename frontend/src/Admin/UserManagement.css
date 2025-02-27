@@ -1,32 +1,77 @@
-.user-management {
-    padding: 20px;
-  }
-  
-  .user-management input {
-    margin-bottom: 10px;
-    padding: 5px;
-    width: 100%;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  button {
-    margin-right: 5px;
-    padding: 5px 10px;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    opacity: 0.8;
-  }
-  
+.add-user-form {
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+  margin: auto;
+}
+
+.add-user-form input,
+.add-user-form select {
+  padding: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.role-button-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.role-button-container select,
+.role-button-container button {
+  font-size: 16px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.role-button-container button {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+.role-button-container button:hover {
+  background-color: #45a049;
+}
+
+input[type="date"] {
+  font-size: 16px;
+  padding: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  padding: 10px;
+  text-align: left;
+}
+
+table th {
+  background-color: #b6aeae;
+}
+
+button {
+  padding: 5px 10px;
+  font-size: 14px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #d32f2f;
+}
