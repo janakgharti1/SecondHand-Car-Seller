@@ -1,15 +1,15 @@
 /* AddCarAuctionStyles.css */
 
-.add-auction-container {
+.add-auction-page .add-auction-container {
     max-width: 900px;
     margin: 0 auto;
     padding: 30px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-  }
-  
-  .add-auction-title {
+}
+
+.add-auction-page .add-auction-title {
     font-size: 28px;
     font-weight: 700;
     color: #333;
@@ -17,9 +17,9 @@
     text-align: center;
     border-bottom: 2px solid #f2f2f2;
     padding-bottom: 15px;
-  }
-  
-  .success-message {
+}
+
+.add-auction-page .success-message {
     background-color: #e3f7e8;
     color: #2a9d5f;
     padding: 15px;
@@ -28,122 +28,122 @@
     text-align: center;
     font-weight: 600;
     border-left: 4px solid #2a9d5f;
-  }
-  
-  .add-auction-form {
+}
+
+.add-auction-page .add-auction-form {
     display: flex;
     flex-direction: column;
     gap: 30px;
-  }
-  
-  .form-section {
+}
+
+.add-auction-page .form-section {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     padding: 20px;
     background-color: #fafafa;
-  }
-  
-  .section-title {
+}
+
+.add-auction-page .section-title {
     font-size: 20px;
     font-weight: 600;
     color: #444;
     margin-bottom: 20px;
     padding-bottom: 10px;
     border-bottom: 1px solid #e0e0e0;
-  }
-  
-  .form-row {
+}
+
+.add-auction-page .form-row {
     margin-bottom: 20px;
     display: flex;
     gap: 20px;
     flex-direction: column;
-  }
-  
-  @media (min-width: 768px) {
-    .form-row.two-columns {
-      flex-direction: row;
+}
+
+@media (min-width: 768px) {
+    .add-auction-page .form-row.two-columns {
+        flex-direction: row;
     }
-    
-    .form-row.two-columns .form-group {
-      width: calc(50% - 10px);
+
+    .add-auction-page .form-row.two-columns .form-group {
+        width: calc(50% - 10px);
     }
-    
-    .form-row.three-columns {
-      flex-direction: row;
+
+    .add-auction-page .form-row.three-columns {
+        flex-direction: row;
     }
-    
-    .form-row.three-columns .form-group {
-      width: calc(33.333% - 14px);
+
+    .add-auction-page .form-row.three-columns .form-group {
+        width: calc(33.333% - 14px);
     }
-  }
-  
-  .form-group {
+}
+
+.add-auction-page .form-group {
     display: flex;
     flex-direction: column;
     width: 100%;
-  }
-  
-  .form-group label {
+}
+
+.add-auction-page .form-group label {
     font-size: 15px;
     font-weight: 600;
     color: #555;
     margin-bottom: 8px;
-  }
-  
-  .optional {
+}
+
+.add-auction-page .optional {
     font-weight: normal;
     color: #888;
     font-size: 14px;
-  }
-  
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
+}
+
+.add-auction-page .form-group input,
+.add-auction-page .form-group select,
+.add-auction-page .form-group textarea {
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 6px;
     font-size: 16px;
     transition: border-color 0.2s, box-shadow 0.2s;
-  }
-  
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
+}
+
+.add-auction-page .form-group input:focus,
+.add-auction-page .form-group select:focus,
+.add-auction-page .form-group textarea:focus {
     border-color: #1a73e8;
     box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
     outline: none;
-  }
-  
-  .form-group input.error,
-  .form-group select.error,
-  .form-group textarea.error,
-  .file-upload.error {
+}
+
+.add-auction-page .form-group input.error,
+.add-auction-page .form-group select.error,
+.add-auction-page .form-group textarea.error,
+.add-auction-page .file-upload.error {
     border-color: #e63946;
     background-color: #fff6f7;
-  }
-  
-  .error-text {
+}
+
+.add-auction-page .error-text {
     color: #e63946;
     font-size: 14px;
     margin-top: 5px;
-  }
-  
-  .file-upload-container {
+}
+
+.add-auction-page .file-upload-container {
     position: relative;
     overflow: hidden;
     margin-bottom: 10px;
-  }
-  
-  .file-upload {
+}
+
+.add-auction-page .file-upload {
     position: absolute;
     font-size: 100px;
     opacity: 0;
     right: 0;
     top: 0;
     cursor: pointer;
-  }
-  
-  .upload-button {
+}
+
+.add-auction-page .upload-button {
     background-color: #f0f0f0;
     color: #555;
     padding: 12px 20px;
@@ -152,36 +152,36 @@
     cursor: pointer;
     border: 1px dashed #ccc;
     transition: all 0.2s;
-  }
-  
-  .upload-button:hover {
+}
+
+.add-auction-page .upload-button:hover {
     background-color: #e5e5e5;
     border-color: #aaa;
-  }
-  
-  .image-preview-container {
+}
+
+.add-auction-page .image-preview-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-top: 15px;
-  }
-  
-  .image-preview-item {
+}
+
+.add-auction-page .image-preview-item {
     position: relative;
     width: 100px;
     height: 100px;
     border-radius: 6px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .image-preview {
+}
+
+.add-auction-page .image-preview {
     width: 100%;
     height: 100%;
     object-fit: cover;
-  }
-  
-  .remove-image-btn {
+}
+
+.add-auction-page .remove-image-btn {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -197,20 +197,20 @@
     justify-content: center;
     font-size: 12px;
     transition: all 0.2s;
-  }
-  
-  .remove-image-btn:hover {
+}
+
+.add-auction-page .remove-image-btn:hover {
     background-color: #fff;
     transform: scale(1.1);
-  }
-  
-  .form-actions {
+}
+
+.add-auction-page .form-actions {
     margin-top: 10px;
     display: flex;
     justify-content: center;
-  }
-  
-  .submit-button {
+}
+
+.add-auction-page .submit-button {
     background-color: #1a73e8;
     color: white;
     padding: 14px 30px;
@@ -221,13 +221,13 @@
     cursor: pointer;
     transition: background-color 0.2s;
     min-width: 200px;
-  }
-  
-  .submit-button:hover {
+}
+
+.add-auction-page .submit-button:hover {
     background-color: #1557b0;
-  }
-  
-  .submit-button:disabled {
+}
+
+.add-auction-page .submit-button:disabled {
     background-color: #a9c2e8;
     cursor: not-allowed;
-  }
+}
