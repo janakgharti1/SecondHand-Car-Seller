@@ -25,6 +25,8 @@ import UserManagement from "./Admin/UserManagement";
 import ReportsAnalytics from "./Admin/ReportsAnalytics";
 import DashboardOverview from "./Admin/DashboardOverview";
 import CarDetails from "./ExploreCars/CarDetails";
+import AntiqueCarAuction from "./Auction/AntiqueCarAuction";
+import AddCarAuction from "./Auction/AddCarAuction";
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("authToken"));
@@ -58,6 +60,8 @@ const AppLayout = ({ isAuthenticated }) => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/carauction" element={<AntiqueCarAuction />} />
+        <Route path="/addcarauction" element={<AddCarAuction />} />
 
         {/* Protected Routes for Users */}
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="User" />}>

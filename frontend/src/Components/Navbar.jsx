@@ -24,7 +24,7 @@ const Navbar = () => {
         <Link to="/usedcar">Explore Car</Link>
         <Link to="/sellcar">Sell Car</Link>
         <Link to="/comparecar">Compare Car</Link>
-        <Link to="contact">Contact</Link>
+        <Link to="/carauction">Auction</Link>
       </div>
       <div id="right">
         {isAuthenticated && <Link to="/userdashboard"><img src={myImage} alt="Logo"/></Link>}
