@@ -37,4 +37,6 @@ router.get("/cars/:id", getCarById); // Fetch a single car by ID
 
 router.get("/compare/:id", compareCars); // for compare cars
 
+
+
 module.exports = router;

@@ -1,5 +1,6 @@
 const Car = require("../models/Cars");
 
+
 // Add a new car
 const addCar = async (req, res) => {
   try {

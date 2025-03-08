@@ -4,6 +4,8 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const carRoutes = require("./routes/carRoutes");
 const path = require("path");
+const vehicleVerificationRoutes = require('./routes/vehicleVerificationRoutes');
+
 
 // Load environment variables
 dotenv.config();
@@ -21,6 +23,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve u
 
 // Routes
 app.use("/api", carRoutes);
+app.use('/api/vehicle-verification', vehicleVerificationRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 4000;
