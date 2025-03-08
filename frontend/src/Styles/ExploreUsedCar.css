@@ -1,81 +1,223 @@
 .explore {
+  max-width: 1300px;
+  margin: 0 auto;
   padding: 20px;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.explore-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 30px 0;
+  background: linear-gradient(135deg, #0a2463, #3e92cc);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.explore-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.explore-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.filters-container {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+}
+
+.filter-group {
+  flex: 1 0 200px;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.search-bar, .dropdown, .price-input {
+  padding: 10px 5px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus, .dropdown:focus, .price-input:focus {
+  border-color: #3e92cc;
+  box-shadow: 0 0 0 3px rgba(62, 146, 204, 0.2);
+  outline: none;
+}
+
+.results-summary {
+  margin-bottom: 20px;
+}
+
+.results-summary h2 {
+  font-size: 1.2rem;
+  color: #555;
+  font-weight: 500;
 }
 
 .carlist {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Adjust card width */
-  gap: 15px; /* Reduced gap between cards */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 0.4fr));
+  gap: 25px;
 }
 
 .car-card {
-  border: 1px solid #ddd;
-  border-radius: 5px; /* Slightly smaller corners */
+  background-color: white;
+  border-radius: 8px;
   overflow: hidden;
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: 100%; /* Ensure it fits within the grid */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.car-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .card-header {
   position: relative;
 }
 
+.car-type {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(10, 36, 99, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 .car-image {
-  width: 100%;
-  height: 120px; /* Reduced height for smaller card */
+  max-width: 100%;
+  height: 300px;
   object-fit: cover;
+  display: block;
 }
 
 .card-body {
-  padding: 10px; /* Reduced padding */
+  padding: 5px 15px;
 }
 
 .car-name {
-  font-size: 16px; /* Reduced font size */
-  margin: 8px 0;
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.car-details {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.car-detail {
+  font-size: 0.9rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.car-detail i {
+  color: #3e92cc;
 }
 
 .car-price {
-  font-weight: bold;
-  color: green;
-  font-size: 14px; /* Adjusted font size */
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0a2463;
+  margin: 15px 0;
 }
 
 .view-details-btn {
-  background-color: #007bff;
-  color: #fff;
-  padding: 8px; /* Reduced button padding */
-  border: none;
-  cursor: pointer;
   width: 100%;
-  text-align: center;
-  border-radius: 0 0 8px 8px;
-  font-size: 14px; /* Reduced button font size */
+  padding: 12px;
+  background-color: #3e92cc;
+  color: white;
+  border: none;
+  border-radius: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .view-details-btn:hover {
-  background-color: #0056b3;
+  background-color: #0a2463;
 }
 
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 50px 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.no-results i {
+  font-size: 3rem;
+  color: #ddd;
   margin-bottom: 20px;
 }
 
-.search-bar, .dropdown, .price-input {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.no-results p {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 20px;
 }
 
-.price-input {
-  width: 100px;
+.reset-filters-btn {
+  background-color: #3e92cc;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.search-bar {
-  flex: 1;
+.reset-filters-btn:hover {
+  background-color: #0a2463;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-group {
+    flex: 1 0 100%;
+  }
+  
+  .carlist {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .explore-header h1 {
+    font-size: 2rem;
+  }
 }
