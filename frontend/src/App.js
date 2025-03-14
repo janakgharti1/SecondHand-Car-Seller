@@ -27,7 +27,7 @@ import DashboardOverview from "./Admin/DashboardOverview";
 import CarDetails from "./ExploreCars/CarDetails";
 import AntiqueCarAuction from "./Auction/AntiqueCarAuction";
 import AddCarAuction from "./Auction/AddCarAuction";
-import VehicleVerification from "./Users/VehicleVerification";
+
 
 
 function App() {
@@ -65,7 +65,6 @@ const AppLayout = ({ isAuthenticated }) => {
         <Route path="/carauction" element={<AntiqueCarAuction />} />
         <Route path="/addcarauction" element={<AddCarAuction />} />
 
-        <Route path="/vehicleverification" element={<VehicleVerification />} />
 
         {/* Protected Routes for Users */}
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="User" />}>
