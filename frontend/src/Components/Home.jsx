@@ -1,6 +1,6 @@
 import React from 'react';
 import '../App.css';
-import myImage from '../Assests/car.png';
+import myImage from '../Assests/car2.png';
 import Explore from './ExploreUsedCar';
 import Footer from './Footer';
 import CompareCar from './CompareCar';
