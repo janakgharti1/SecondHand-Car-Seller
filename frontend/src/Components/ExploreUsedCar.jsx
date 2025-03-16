@@ -10,8 +10,12 @@ const ExploreUsedCar = () => {
   const [carTypeFilter, setCarTypeFilter] = useState("");
   const [fuelTypeFilter, setFuelTypeFilter] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [transmissionFilter, setTransmissionFilter] = useState("");
   const [maxBudget, setMaxBudget] = useState("");
+  const [minYear, setMinYear] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const carsPerPage = 6; // Pagination: 6 cars per page
 
   // Fetch car data from the backend
   useEffect(() => {
@@ -30,19 +34,32 @@ const ExploreUsedCar = () => {
     fetchCars();
   }, []);
 
-  // Get unique locations for dropdown
+  // Get unique values for dropdowns
   const uniqueLocations = [...new Set(cars.map(car => car.location))].sort();
+  const uniqueCarTypes = [...new Set(cars.map(car => car.carType))].sort();
+  const uniqueFuelTypes = [...new Set(cars.map(car => car.fuelType))].sort();
+  const uniqueTransmissions = [...new Set(cars.map(car => car.transmission))].sort();
 
   // Apply filters
   const filteredCars = cars.filter((car) => {
-    const matchesSearch = car.carName.toLowerCase().includes(search.toLowerCase());
+    const matchesSearch = car.carName.toLowerCase().includes(search.toLowerCase()) ||
+                          car.brand.toLowerCase().includes(search.toLowerCase());
     const matchesCarType = carTypeFilter ? car.carType === carTypeFilter : true;
     const matchesFuelType = fuelTypeFilter ? car.fuelType === fuelTypeFilter : true;
     const matchesLocation = locationFilter ? car.location === locationFilter : true;
+    const matchesTransmission = transmissionFilter ? car.transmission === transmissionFilter : true;
     const matchesBudget = maxBudget ? car.price <= parseFloat(maxBudget) : true;
+    const matchesYear = minYear ? car.carYear >= parseInt(minYear) : true;
 
-    return matchesSearch && matchesCarType && matchesFuelType && matchesLocation && matchesBudget;
+    return matchesSearch && matchesCarType && matchesFuelType && matchesLocation && 
+           matchesTransmission && matchesBudget && matchesYear;
   });
+
+  // Pagination logic
+  const indexOfLastCar = currentPage * carsPerPage;
+  const indexOfFirstCar = indexOfLastCar - carsPerPage;
+  const currentCars = filteredCars.slice(indexOfFirstCar, indexOfLastCar);
+  const totalPages = Math.ceil(filteredCars.length / carsPerPage);
 
   // Reset all filters
   const resetFilters = () => {
@@ -50,7 +67,16 @@ const ExploreUsedCar = () => {
     setCarTypeFilter("");
     setFuelTypeFilter("");
     setLocationFilter("");
+    setTransmissionFilter("");
     setMaxBudget("");
+    setMinYear("");
+    setCurrentPage(1);
+  };
+
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
@@ -59,7 +85,7 @@ const ExploreUsedCar = () => {
         <h1>Find Your Perfect Used Car</h1>
         <p>Browse our collection of quality pre-owned vehicles</p>
       </div>
-      
+
       {/* Search and Filters */}
       <div className="filters-container">
         <div className="filters">
@@ -68,7 +94,7 @@ const ExploreUsedCar = () => {
             <input
               id="search"
               type="text"
-              placeholder="Search (Name)"
+              placeholder="Search by Name or Brand"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="search-bar"
@@ -84,10 +110,9 @@ const ExploreUsedCar = () => {
               className="dropdown"
             >
               <option value="">All Car Types</option>
-              <option value="SUV">SUV</option>
-              <option value="Sedan">Sedan</option>
-              <option value="Hatchback">Hatchback</option>
-              <option value="Truck">Truck</option>
+              {uniqueCarTypes.map(type => (
+                <option key={type} value={type}>{type}</option>
+              ))}
             </select>
           </div>
 
@@ -100,10 +125,9 @@ const ExploreUsedCar = () => {
               className="dropdown"
             >
               <option value="">All Fuel Types</option>
-              <option value="Petrol">Petrol</option>
-              <option value="Diesel">Diesel</option>
-              <option value="Electric">Electric</option>
-              <option value="Hybrid">Hybrid</option>
+              {uniqueFuelTypes.map(fuel => (
+                <option key={fuel} value={fuel}>{fuel}</option>
+              ))}
             </select>
           </div>
 
@@ -123,16 +147,50 @@ const ExploreUsedCar = () => {
           </div>
 
           <div className="filter-group">
-            <label htmlFor="budget">Your Budget</label>
+            <label htmlFor="transmission">Transmission</label>
+            <select
+              id="transmission"
+              value={transmissionFilter}
+              onChange={(e) => setTransmissionFilter(e.target.value)}
+              className="dropdown"
+            >
+              <option value="">All Transmissions</option>
+              {uniqueTransmissions.map(trans => (
+                <option key={trans} value={trans}>{trans}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label htmlFor="budget">Max Budget</label>
             <input
               id="budget"
               type="number"
-              placeholder="Max budget (in lakhs)"
+              placeholder="Max budget (NPR)"
               value={maxBudget}
               onChange={(e) => setMaxBudget(e.target.value)}
               className="price-input"
+              min="0"
             />
           </div>
+
+          <div className="filter-group">
+            <label htmlFor="minYear">Min Year</label>
+            <input
+              id="minYear"
+              type="number"
+              placeholder="Min year (e.g., 2010)"
+              value={minYear}
+              onChange={(e) => setMinYear(e.target.value)}
+              className="year-input"
+              min="1990"
+              max={new Date().getFullYear()}
+            />
+          </div>
+
+          <button onClick={resetFilters} className="reset-filters-btn">
+            Reset Filters
+          </button>
         </div>
       </div>
 
@@ -146,9 +204,10 @@ const ExploreUsedCar = () => {
         {isLoading ? (
           <div className="no-results">
             <p>Loading cars...</p>
+            <i className="fa fa-spinner fa-spin"></i>
           </div>
-        ) : filteredCars.length > 0 ? (
-          filteredCars.map((car) => (
+        ) : currentCars.length > 0 ? (
+          currentCars.map((car) => (
             <div key={car._id} className="car-card">
               <div className="card-header">
                 <span className="car-type">{car.carType.toUpperCase()}</span>
@@ -160,25 +219,32 @@ const ExploreUsedCar = () => {
                   }
                   alt={car.carName}
                   className="car-image"
+                  onError={(e) => (e.target.src = "https://via.placeholder.com/300x200")}
                 />
               </div>
               <div className="card-body">
-                <h3 className="car-name">{car.carName}</h3>
+                <h3 className="car-name">{car.brand} {car.carName} ({car.carYear})</h3>
                 <div className="car-details">
                   <p className="car-detail">
                     <i className="fa fa-gas-pump"></i> {car.fuelType}
                   </p>
                   <p className="car-detail">
+                    <i className="fa fa-cogs"></i> {car.transmission}
+                  </p>
+                  <p className="car-detail">
                     <i className="fa fa-map-marker-alt"></i> {car.location}
                   </p>
                   <p className="car-detail">
-                    <i className="fa fa-road"></i> {car.kmsDriven} km
+                    <i className="fa fa-road"></i> {car.kmsDriven.toLocaleString()} km
+                  </p>
+                  <p className="car-detail">
+                    <i className="fa fa-user"></i> {car.ownership}
                   </p>
                 </div>
-                <p className="car-price">NPR {car.price} lakhs</p>
+                <p className="car-price">NPR {car.price.toLocaleString()}</p>
               </div>
-              <button 
-                className="view-details-btn" 
+              <button
+                className="view-details-btn"
                 onClick={() => navigate(`/car/${car._id}`)}
               >
                 View Details
@@ -195,6 +261,35 @@ const ExploreUsedCar = () => {
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+            className="page-btn"
+          >
+            Previous
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => handlePageChange(page)}
+              className={`page-btn ${currentPage === page ? "active" : ""}`}
+            >
+              {page}
+            </button>
+          ))}
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+            className="page-btn"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 };
