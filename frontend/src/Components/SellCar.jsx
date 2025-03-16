@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../Styles/SellCar.css";
-import { auth } from "../firebase"; // Import your Firebase config file
-import { onAuthStateChanged } from "firebase/auth"; // Import auth state listener
+import { auth } from "../firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 const SellCar = () => {
   const [formData, setFormData] = useState({
@@ -20,25 +20,25 @@ const SellCar = () => {
     description: "",
     featuredImage: null,
     gallery: Array(8).fill(null),
+    picWithCar: null,
+    vin: "",
+    registrationNumber: "",
+    insuranceStatus: "",
+    verificationDoc: null
   });
 
   const [message, setMessage] = useState("");
-  const [userUID, setUserUID] = useState(null); // Store the user's UID
+  const [userUID, setUserUID] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get user UID on component mount
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUserUID(user.uid); // Set the UID if the user is authenticated
+        setUserUID(user.uid);
       } else {
         setMessage("User not authenticated.");
-        // Optionally redirect to login page
-        // navigate("/login");
       }
     });
-
-    // Cleanup subscription on component unmount
     return () => unsubscribe();
   }, []);
 
@@ -53,7 +53,8 @@ const SellCar = () => {
       newGallery[index] = e.target.files[0];
       setFormData({ ...formData, gallery: newGallery });
     } else {
-      setFormData({ ...formData, featuredImage: e.target.files[0] });
+      const { name } = e.target;
+      setFormData({ ...formData, [name]: e.target.files[0] });
     }
   };
 
@@ -62,17 +63,17 @@ const SellCar = () => {
     setIsLoading(true);
     setMessage("");
 
-    // Validate form data
     if (!formData.brand || !formData.carType || !formData.transmission ||
-      !formData.fuelType || !formData.carYear || !formData.carName ||
-      !formData.kmsDriven || !formData.price || !formData.location ||
-      !formData.engine || !formData.description || !formData.featuredImage) {
-      setMessage("Please fill all required fields");
+      !formData.fuelType || !formData.carYear || !formData.ownership || 
+      !formData.carName || !formData.kmsDriven || !formData.price || 
+      !formData.location || !formData.engine || !formData.description || 
+      !formData.featuredImage || !formData.picWithCar || !formData.vin || 
+      !formData.registrationNumber || !formData.insuranceStatus) {
+      setMessage("Please fill all required fields, including a picture with the car.");
       setIsLoading(false);
       return;
     }
 
-    // Validate at least two images in the gallery
     const galleryImages = formData.gallery.filter((file) => file !== null);
     if (galleryImages.length < 2) {
       setMessage("At least 2 gallery images are required.");
@@ -80,7 +81,6 @@ const SellCar = () => {
       return;
     }
 
-    // Check if the user is authenticated
     if (!userUID) {
       setMessage("Please log in to submit the car details.");
       setIsLoading(false);
@@ -88,40 +88,29 @@ const SellCar = () => {
     }
 
     try {
-      // Get Firebase authentication token
       const token = await auth.currentUser.getIdToken();
-
-      // Create FormData object
       const uploadData = new FormData();
       Object.keys(formData).forEach((key) => {
         if (key === "gallery") {
-          formData.gallery.forEach((file, index) => {
-            if (file) {
-              uploadData.append(`gallery`, file);
-            }
+          formData.gallery.forEach((file) => {
+            if (file) uploadData.append(`gallery`, file);
           });
-        } else if (key === "featuredImage") {
-          if (formData.featuredImage) {
-            uploadData.append("featuredImage", formData.featuredImage);
-          }
+        } else if (key === "featuredImage" || key === "picWithCar" || key === "verificationDoc") {
+          if (formData[key]) uploadData.append(key, formData[key]);
         } else {
           uploadData.append(key, formData[key]);
         }
       });
-
-      // Add the user UID to the FormData
       uploadData.append("userId", userUID);
 
       const response = await axios.post("http://localhost:4000/api/cars", uploadData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`, // Include token here
+          Authorization: `Bearer ${token}`,
         },
       });
 
-      // Success message
       setMessage(response.data.message || "Car details uploaded successfully!");
-
     } catch (err) {
       console.error("Error submitting car details:", err);
       setMessage(err.response?.data?.message || "Error uploading car details. Please try again.");
@@ -325,6 +314,7 @@ const SellCar = () => {
           </label>
           <input
             type="file"
+            name="featuredImage"
             onChange={(e) => handleFileChange(e)}
             accept="image/*"
             required
@@ -359,6 +349,85 @@ const SellCar = () => {
                 )}
               </div>
             ))}
+          </div>
+        </div>
+
+        <div className="pic-with-car-section">
+          <label>
+            <i className="fa fa-user-friends"></i> Picture with Car <span className="required">*</span>
+          </label>
+          <p className="instruction">Please upload a clear picture of yourself with the car for verification.</p>
+          <input
+            type="file"
+            name="picWithCar"
+            onChange={(e) => handleFileChange(e)}
+            accept="image/*"
+            required
+          />
+          {formData.picWithCar && (
+            <span className="file-name">{formData.picWithCar.name}</span>
+          )}
+        </div>
+
+        <div className="verification-section">
+          <h3>Vehicle Verification</h3>
+          <div className="form-row">
+            <label>
+              <i className="fa fa-id-card"></i> VIN (Vehicle Identification Number)
+            </label>
+            <input
+              type="text"
+              name="vin"
+              placeholder="Enter VIN"
+              value={formData.vin}
+              onChange={handleInputChange}
+              maxLength="17"
+              required
+            />
+
+            <label>
+              <i className="fa fa-registered"></i> Registration Number
+            </label>
+            <input
+              type="text"
+              name="registrationNumber"
+              placeholder="Enter Registration Number"
+              value={formData.registrationNumber}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div className="form-row">
+            <label>
+              <i className="fa fa-shield-alt"></i> Insurance Status
+            </label>
+            <select
+              name="insuranceStatus"
+              value={formData.insuranceStatus}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Select Insurance Status</option>
+              <option value="Active">Active</option>
+              <option value="Expired">Expired</option>
+              <option value="Not Insured">Not Insured</option>
+            </select>
+          </div>
+
+          <div className="file-upload">
+            <label>
+              <i className="fa fa-file-upload"></i> Verification Document (e.g., Registration, Insurance)
+            </label>
+            <input
+              type="file"
+              name="verificationDoc"
+              onChange={(e) => handleFileChange(e)}
+              accept="image/*,application/pdf"
+            />
+            {formData.verificationDoc && (
+              <span className="file-name">{formData.verificationDoc.name}</span>
+            )}
           </div>
         </div>
 

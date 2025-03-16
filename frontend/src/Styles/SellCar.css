@@ -217,6 +217,15 @@ select option {
   padding: 10px;
 }
 
+/* Validation Error Styling */
+.error-text {
+  display: block;
+  margin-top: 5px;
+  color: #e74c3c;
+  font-size: 13px;
+  font-weight: 400;
+}
+
 /* Smooth animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }

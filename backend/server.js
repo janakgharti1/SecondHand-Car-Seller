@@ -23,7 +23,6 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve u
 
 // Routes
 app.use("/api", carRoutes);
-
 app.use('/api', auctionRoutes);
 
 // Error handling middleware (optional, for better error reporting)
