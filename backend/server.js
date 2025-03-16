@@ -4,7 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const carRoutes = require("./routes/carRoutes");
 const path = require("path");
-// const vehicleVerificationRoutes = require('./routes/vehicleVerificationRoutes');
+
 const auctionRoutes = require('./routes/auctionRoutes');
 
 // Load environment variables
@@ -23,7 +23,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve u
 
 // Routes
 app.use("/api", carRoutes);
-// app.use('/api/vehicle-verification', vehicleVerificationRoutes);
+
 app.use('/api', auctionRoutes);
 
 // Error handling middleware (optional, for better error reporting)

@@ -29,7 +29,6 @@ import AntiqueCarAuction from "./Auction/AntiqueCarAuction";
 import AddCarAuction from "./Auction/AddCarAuction";
 
 
-
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("authToken"));
 
