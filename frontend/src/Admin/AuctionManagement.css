@@ -1,0 +1,488 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap'); */
+
+.add-auction-container {
+    max-width: 960px;
+    margin: 20px auto;
+    padding: 2rem;
+    font-family: 'Montserrat', sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  }
+  
+  .add-auction-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1e3a8a;
+    font-weight: 700;
+    font-size: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  
+  .title-icon, .section-icon {
+    margin-right: 0.5rem;
+  }
+  
+  .success-message {
+    background-color: #e6f7f0;
+    color: #0c6e58;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  .success-icon {
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+  }
+  
+  /* Progress Bar */
+  .progress-container {
+    margin-bottom: 2rem;
+  }
+  
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+  }
+  
+  .step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #e2e8f0;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .step-label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b;
+    transition: all 0.3s ease;
+  }
+  
+  .progress-step.active .step-number {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .progress-step.active .step-label {
+    color: #3b82f6;
+    font-weight: 600;
+  }
+  
+  .progress-step.complete .step-number {
+    background-color: #10b981;
+    color: white;
+  }
+  
+  .progress-step.complete .step-label {
+    color: #10b981;
+  }
+  
+  .progress-line {
+    flex: 1;
+    height: 3px;
+    background-color: #e2e8f0;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .progress-line::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 50%;
+    background-color: #3b82f6;
+    transition: width 0.3s ease;
+  }
+  
+  .form-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .section-title {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #1e3a8a;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f0f4f8;
+  }
+  
+  .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .form-group {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #4b5563;
+  }
+  
+  .optional {
+    font-weight: normal;
+    font-size: 0.8rem;
+    color: #6b7280;
+    font-style: italic;
+  }
+  
+  .form-hint {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+    line-height: 1.4;
+  }
+  
+  .character-count {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+    text-align: right;
+  }
+  
+  input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+  }
+  
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  input.error, select.error, textarea.error {
+    border-color: #ef4444;
+  }
+  
+  .error-text {
+    color: #ef4444;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+  }
+  
+  /* Currency input styling */
+  .currency-input {
+    position: relative;
+  }
+  
+  .currency-symbol {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    font-weight: 500;
+  }
+  
+  .currency-input input {
+    padding-left: 1.75rem;
+  }
+  
+  /* Select with icon */
+  .select-with-icon {
+    position: relative;
+  }
+  
+  .select-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+  }
+  
+  .select-with-icon select {
+    padding-left: 2.25rem;
+  }
+  
+  /* File upload area */
+  .file-upload-area {
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-color: #f9fafb;
+  }
+  
+  .file-upload-area:hover {
+    border-color: #3b82f6;
+    background-color: #f0f7ff;
+  }
+  
+  .file-upload-area input[type="file"] {
+    display: none;
+  }
+  
+  .upload-icon {
+    font-size: 2.5rem;
+    color: #3b82f6;
+    margin-bottom: 1rem;
+  }
+  
+  .upload-text {
+    color: #4b5563;
+  }
+  
+  .upload-title {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .upload-subtitle {
+    font-size: 0.8rem;
+    color: #6b7280;
+  }
+  
+  /* Image preview area */
+  .image-preview-section {
+    margin-top: 2rem;
+  }
+  
+  .preview-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: #4b5563;
+  }
+  
+  .image-preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+  
+  .image-preview-item {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    aspect-ratio: 4/3;
+  }
+  
+  .image-preview-item.featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+  
+  .image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+  
+  .image-preview-item:hover .image-preview {
+    transform: scale(1.05);
+  }
+  
+  .image-actions {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 0.5rem;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .image-preview-item:hover .image-actions {
+    opacity: 1;
+  }
+  
+  .featured-badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  
+  .set-featured-btn, .remove-image-btn {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+  }
+  
+  .set-featured-btn:hover {
+    background-color: #3b82f6;
+  }
+  
+  .remove-image-btn:hover {
+    background-color: #ef4444;
+  }
+  
+  /* Form actions */
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    gap: 1rem;
+  }
+  
+  .next-button, .back-button, .submit-button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  
+  .next-button {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .next-button:hover {
+    background-color: #2563eb;
+  }
+  
+  .back-button {
+    background-color: #f3f4f6;
+    color: #4b5563;
+  }
+  
+  .back-button:hover {
+    background-color: #e5e7eb;
+  }
+  
+  .submit-button {
+    background-color: #10b981;
+    color: white;
+  }
+  
+  .submit-button:hover:not(:disabled) {
+    background-color: #059669;
+  }
+  
+  .submit-button:disabled {
+    background-color: #d1d5db;
+    cursor: not-allowed;
+  }
+  
+  /* Loading spinner */
+  .spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 0.5rem;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .add-auction-container {
+      padding: 1.5rem;
+    }
+    
+    .form-section {
+      padding: 1.5rem;
+    }
+    
+    .form-row {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .add-auction-title {
+      font-size: 1.8rem;
+    }
+    
+    .image-preview-item.featured {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+  }
