@@ -1,4 +1,3 @@
-/* Main container */
 .sell-car-container {
   max-width: 1000px;
   margin: 20px auto;
@@ -10,11 +9,10 @@
   animation: fadeIn 0.4s ease-out;
 }
 
-/* Form styling */
 .sell-car-form {
   display: flex;
   flex-direction: column;
-  gap: 25px; /* Increased gap for better spacing */
+  gap: 20px;
 }
 
 .sell-car-form h2 {
@@ -27,7 +25,6 @@
   padding-bottom: 15px;
 }
 
-/* Form row grid */
 .form-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -52,21 +49,30 @@
   color: #3498db;
 }
 
+/* Equal padding for all inputs */
 .form-row input,
 .form-row select,
-.sell-car-form textarea {
+.sell-car-form textarea,
+.custom-input,
+.file-upload input[type="file"],
+.pic-with-car-section input[type="file"] {
   width: 100%;
-  padding: 12px 15px;
+  padding: 12px 15px; /* Equal left and right padding */
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 15px;
   transition: border-color 0.3s, box-shadow 0.3s;
   background-color: #f9f9f9;
+  box-sizing: border-box;
 }
 
 .form-row input:focus,
 .form-row select:focus,
-.sell-car-form textarea:focus {
+.sell-car-form textarea:focus,
+.custom-input:focus,
+.file-upload input[type="file"]:focus,
+.pic-with-car-section input[type="file"]:focus {
+  outline: none;
   border-color: #3498db;
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
   background-color: #fff;
@@ -74,7 +80,10 @@
 
 .form-row input:hover,
 .form-row select:hover,
-.sell-car-form textarea:hover {
+.sell-car-form textarea:hover,
+.custom-input:hover,
+.file-upload input[type="file"]:hover,
+.pic-with-car-section input[type="file"]:hover {
   border-color: #bdc3c7;
 }
 
@@ -83,9 +92,8 @@
   min-height: 120px;
 }
 
-/* File upload styling */
 .file-upload {
-  margin-top: 15px; /* Increased margin for better spacing */
+  margin-top: 10px;
 }
 
 .file-upload label {
@@ -95,19 +103,10 @@
   color: #555;
 }
 
-.file-upload label i {
-  margin-right: 5px;
-  color: #3498db;
-}
-
 .file-upload input[type="file"] {
-  width: 100%;
-  padding: 10px;
   background-color: #f9f9f9;
   border: 1px dashed #ccc;
-  border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
 }
 
 .file-name {
@@ -121,16 +120,14 @@
   max-width: 100%;
 }
 
-/* Gallery styling */
 .gallery {
-  margin-top: 25px;
+  margin-top: 20px;
 }
 
 .gallery-instruction {
   margin-bottom: 10px;
   color: #555;
   font-size: 15px;
-  font-weight: 500;
 }
 
 .gallery-grid {
@@ -142,12 +139,6 @@
 @media (max-width: 768px) {
   .gallery-grid {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .gallery-grid {
-    grid-template-columns: 1fr;
   }
 }
 
@@ -184,70 +175,44 @@
 
 .file-selected {
   color: #3498db;
-  font-size: 24px;
 }
 
-/* Verification section */
+.pic-with-car-section {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Consistent spacing between elements */
+}
+
+.pic-with-car-section label {
+  font-weight: 500;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between icon and text */
+}
+
+.instruction {
+  font-size: 14px;
+  color: #666;
+  margin: 0; /* Rely on flex gap for spacing */
+  line-height: 1.4;
+}
+
 .verification-section {
-  margin-top: 25px;
+  margin: 30px 0;
   padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
 }
 
 .verification-section h3 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   color: #333;
-  font-size: 20px;
-  font-weight: 600;
 }
 
-.verification-section .form-row {
-  gap: 15px;
-}
-
-.verification-section .required {
-  color: #e74c3c;
-  font-size: 14px;
-}
-
-/* Picture with car section */
-.pic-with-car-section {
-  margin-top: 25px;
-}
-
-.pic-with-car-section .instruction {
-  margin: 5px 0 10px;
-  color: #777;
-  font-size: 14px;
-}
-
-/* Agreement section */
-.agreement-section {
-  margin: 25px 0;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 5px;
-}
-
-.agreement-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: #555;
-}
-
-.agreement-checkbox input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: #3498db; /* Modern checkbox color */
-}
-
-/* Submit button */
 .submitbtn {
-  margin-top: 25px;
+  margin-top: 20px;
   padding: 14px 25px;
   background-color: #3498db;
   color: white;
@@ -256,7 +221,7 @@
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  transition: background-color 0.3s;
   text-transform: uppercase;
   letter-spacing: 1px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
@@ -264,23 +229,19 @@
 
 .submitbtn:hover:not(:disabled) {
   background-color: #2980b9;
-  transform: translateY(-2px);
 }
 
 .submitbtn:disabled {
   background-color: #95a5a6;
   cursor: not-allowed;
-  box-shadow: none;
 }
 
-/* Message styling */
 .message {
   text-align: center;
   padding: 15px;
   margin-top: 20px;
   border-radius: 6px;
   font-weight: 500;
-  font-size: 15px;
 }
 
 .message.success {
@@ -295,22 +256,29 @@
   border: 1px solid #f5c6cb;
 }
 
-/* Custom input for "Other" fields */
-.custom-input {
-  margin-top: 10px;
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 15px;
-  background-color: #f9f9f9;
-  transition: border-color 0.3s, box-shadow 0.3s;
+.agreement-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
 }
 
-.custom-input:focus {
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-  background-color: #fff;
+.agreement-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.agreement-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.custom-input {
+  margin-top: 10px;
 }
 
 /* Smooth animations */
@@ -319,15 +287,20 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Focus states */
+/* Remove default focus outlines and add custom ones */
 input:focus,
 select:focus,
 textarea:focus,
-button:focus {
+button:focus,
+input[type="file"]:focus {
   outline: none;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
 
-/* Error text (for potential future use) */
+select option {
+  padding: 10px;
+}
+
 .error-text {
   display: block;
   margin-top: 5px;

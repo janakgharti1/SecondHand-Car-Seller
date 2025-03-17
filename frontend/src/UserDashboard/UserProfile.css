@@ -1,79 +1,141 @@
 .user-profile-container {
-    max-width: 400px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #f8f9fa;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.307);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.user-profile-container h2 {
+  color: #333;
+  font-size: 1.8rem;
+  margin-bottom: 1.2rem;
+  font-weight: 600;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0.75rem;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.profile-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #555;
+  font-weight: 500;
+  width: 100%;
+}
+
+.profile-form input,
+.profile-form select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #ffffff;
+  width: 100%; /* Changed from calc(100% - 2rem) */
+  box-sizing: border-box;
+}
+
+.profile-form input:focus,
+.profile-form select:focus {
+  outline: none;
+  border-color: #007bff; /* Changed from #4a90e2 to match dashboard */
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2); /* Updated to match new color */
+}
+
+.profile-form input:disabled,
+.profile-form select:disabled {
+  background-color: #f7f7f7;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.profile-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.profile-buttons button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.profile-buttons button:first-child {
+  background-color: #007bff; /* Changed from #4a90e2 to match dashboard */
+  color: white;
+}
+
+.profile-buttons button:first-child:hover {
+  background-color: #0069d9; /* Darker shade of the new color */
+  transform: translateY(-2px);
+}
+
+.profile-buttons button:last-child {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.profile-buttons button:last-child:hover {
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
+}
+
+.profile-buttons button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+  transform: none;
+}
+
+.error-message {
+  color: #e53935;
+  background-color: rgba(229, 57, 53, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.success-message {
+  color: #43a047;
+  background-color: rgba(67, 160, 71, 0.1);
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .user-profile-container {
+    padding: 1.5rem;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   }
   
-  .user-profile-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  .user-profile-container .profile-form {
-    display: flex;
+  .profile-buttons {
     flex-direction: column;
-    gap: 15px;
   }
   
-  .user-profile-container label {
-    display: flex;
-    flex-direction: column;
-    font-weight: 400;
-    color: #333;
+  .profile-buttons button {
+    width: 100%;
   }
-  
-  .user-profile-container input,
-  .user-profile-container select {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-top: 5px;
-  }
-  
-  .user-profile-container input:disabled,
-  .user-profile-container select:disabled {
-    background: #e9ecef;
-    color: #6c757d;
-  }
-  
-  .user-profile-container .profile-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 15px;
-  }
-  
-  .user-profile-container button {
-    padding: 8px 20px;
-    font-size: 14px;
-    color: #fff;
-    background-color: #2e57ddd3;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .user-profile-container button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-  }
-  
-  .user-profile-container button:hover:not(:disabled) {
-    background-color: #0056b3;
-  }
-  
-  .user-profile-container .error-message {
-    color: #dc3545;
-    text-align: center;
-  }
-  
-  .user-profile-container .success-message {
-    color: #28a745;
-    text-align: center;
-  }
-  
+}
