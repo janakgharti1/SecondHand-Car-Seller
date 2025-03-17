@@ -1,176 +1,156 @@
 const Car = require("../models/Cars");
 
-// Add a new car
 const addCar = async (req, res) => {
   try {
     const { body, files } = req;
-    const userId = req.user.uid;
-
+    
     const featuredImage = files.featuredImage ? files.featuredImage[0].filename : null;
-    const gallery = files.gallery ? files.gallery.map((file) => file.filename) : [];
+    const gallery = files.gallery ? files.gallery.map(file => file.filename) : [];
     const picWithCar = files.picWithCar ? files.picWithCar[0].filename : null;
     const verificationDoc = files.verificationDoc ? files.verificationDoc[0].filename : null;
 
-    // Validation for required fields (excluding VIN length check)
-    if (!body.brand || !body.carType || !body.transmission || !body.fuelType || 
-        !body.carYear || !body.ownership || !body.carName || !body.kmsDriven || 
-        !body.price || !body.location || !body.engine || !body.description || 
-        !featuredImage || !picWithCar || !body.vin || !body.registrationNumber || 
-        !body.insuranceStatus) {
-      return res.status(400).json({ message: "All required fields must be provided." });
+    const finalBrand = body.brand === "Other" ? body.customBrand : body.brand;
+    const finalCarType = body.carType === "Other" ? body.customCarType : body.carType;
+    const finalLocation = body.location === "Other" ? body.customLocation : body.location;
+
+    if (!finalBrand || !finalCarType || !finalLocation || !body.transmission || !body.fuelType ||
+        !body.carYear || !body.ownership || !body.carName || !body.kmsDriven || !body.price ||
+        !body.engine || !body.description || !featuredImage || gallery.length < 2 || !picWithCar ||
+        !body.vin || !body.registrationNumber || !body.insuranceStatus) {
+      return res.status(400).json({ message: "All required fields must be provided" });
     }
 
-    if (gallery.length < 2) {
-      return res.status(400).json({ message: "At least 2 gallery images are required." });
+    if (body.agreementAccepted !== "true") {
+      return res.status(400).json({ message: "You must agree to the commission terms" });
     }
 
     const car = new Car({
-      userId,
-      ...body,
+      userId: req.user.uid,
+      brand: finalBrand,
+      carType: finalCarType,
+      transmission: body.transmission,
+      fuelType: body.fuelType,
+      carYear: Number(body.carYear),
+      ownership: body.ownership,
+      carName: body.carName,
+      kmsDriven: Number(body.kmsDriven),
+      price: Number(body.price),
+      location: finalLocation,
+      engine: body.engine,
+      description: body.description,
       featuredImage,
       gallery,
       picWithCar,
+      vin: body.vin,
+      registrationNumber: body.registrationNumber,
+      insuranceStatus: body.insuranceStatus,
       verificationDoc,
+      agreementAccepted: true
     });
 
-    await car.save();
-    res.status(201).json({ message: "Car details uploaded successfully!", carId: car._id });
+    const savedCar = await car.save();
+    res.status(201).json({ message: "Car listed successfully", car: savedCar });
   } catch (err) {
-    console.error("Error adding car:", err);
-    res.status(500).json({ message: "Error uploading car details.", error: err.message });
+    console.error(err);
+    res.status(500).json({ message: "Error listing car", error: err.message });
   }
 };
 
-// Get cars for the authenticated user
 const getUserCars = async (req, res) => {
   try {
-    const userId = req.user.uid;
-    const userCars = await Car.find({ userId });
-    res.status(200).json(userCars);
+    const cars = await Car.find({ userId: req.user.uid });
+    res.status(200).json(cars);
   } catch (error) {
-    console.error("Error fetching user cars:", error);
-    res.status(500).json({ message: "Failed to fetch user cars.", error: error.message });
+    res.status(500).json({ message: "Failed to fetch user cars", error: error.message });
   }
 };
 
-// Get all cars (for admins or testing)
 const getAllCars = async (req, res) => {
   try {
     const cars = await Car.find();
     res.status(200).json(cars);
   } catch (error) {
-    console.error("Error fetching cars:", error);
-    res.status(500).json({ message: "Failed to fetch cars.", error: error.message });
+    res.status(500).json({ message: "Failed to fetch cars", error: error.message });
   }
 };
 
-// Delete a car
 const deleteCar = async (req, res) => {
   try {
-    const carId = req.params.id;
-    const userId = req.user.uid;
-
-    const car = await Car.findOne({ _id: carId, userId });
+    const car = await Car.findOneAndDelete({ _id: req.params.id, userId: req.user.uid });
     if (!car) {
-      return res.status(404).json({ message: "Car not found or not owned by user." });
+      return res.status(404).json({ message: "Car not found or unauthorized" });
     }
-
-    await Car.findByIdAndDelete(carId);
-    res.status(200).json({ message: "Car deleted successfully." });
+    res.status(200).json({ message: "Car deleted successfully" });
   } catch (error) {
-    console.error("Error deleting car:", error);
-    res.status(500).json({ message: "Failed to delete car.", error: error.message });
+    res.status(500).json({ message: "Failed to delete car", error: error.message });
   }
 };
 
-// Update a car
 const updateCar = async (req, res) => {
   try {
-    const carId = req.params.id;
     const { body, files } = req;
-    const userId = req.user.uid;
+    
+    const updatedData = {};
+    if (body.brand) updatedData.brand = body.brand === "Other" ? body.customBrand : body.brand;
+    if (body.carType) updatedData.carType = body.carType === "Other" ? body.customCarType : body.carType;
+    if (body.location) updatedData.location = body.location === "Other" ? body.customLocation : body.location;
+    
+    const fields = ['transmission', 'fuelType', 'ownership', 'carName', 'engine', 'description', 
+                    'vin', 'registrationNumber', 'insuranceStatus'];
+    fields.forEach(field => { if (body[field]) updatedData[field] = body[field]; });
+    
+    if (body.carYear) updatedData.carYear = Number(body.carYear);
+    if (body.kmsDriven) updatedData.kmsDriven = Number(body.kmsDriven);
+    if (body.price) updatedData.price = Number(body.price);
+    if (files?.featuredImage) updatedData.featuredImage = files.featuredImage[0].filename;
+    if (files?.gallery) updatedData.gallery = files.gallery.map(file => file.filename);
+    if (files?.picWithCar) updatedData.picWithCar = files.picWithCar[0].filename;
+    if (files?.verificationDoc) updatedData.verificationDoc = files.verificationDoc[0].filename;
+    if (body.agreementAccepted) updatedData.agreementAccepted = body.agreementAccepted === "true";
 
-    const car = await Car.findOne({ _id: carId, userId });
+    const car = await Car.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.uid },
+      updatedData,
+      { new: true, runValidators: true }
+    );
+
     if (!car) {
-      return res.status(404).json({ message: "Car not found or not owned by user." });
+      return res.status(404).json({ message: "Car not found or unauthorized" });
     }
-
-    const updatedCarData = { ...body };
-    if (files.featuredImage) updatedCarData.featuredImage = files.featuredImage[0].filename;
-    if (files.gallery) updatedCarData.gallery = files.gallery.map((file) => file.filename);
-    if (files.picWithCar) updatedCarData.picWithCar = files.picWithCar[0].filename;
-    if (files.verificationDoc) updatedCarData.verificationDoc = files.verificationDoc[0].filename;
-
-    const updatedCar = await Car.findByIdAndUpdate(carId, updatedCarData, { new: true });
-    res.status(200).json({ message: "Car updated successfully.", car: updatedCar });
+    res.status(200).json({ message: "Car updated successfully", car });
   } catch (error) {
-    console.error("Error updating car:", error);
-    res.status(500).json({ message: "Failed to update car.", error: error.message });
+    res.status(500).json({ message: "Failed to update car", error: error.message });
   }
 };
 
-// Get a single car by ID
 const getCarById = async (req, res) => {
   try {
     const car = await Car.findById(req.params.id);
-    if (!car) {
-      return res.status(404).json({ message: "Car not found." });
-    }
-    res.status(200).json(car);
+    if (!car) return res.status(404).json({ message: "Car not found" });
+    res.json(car);
   } catch (error) {
-    console.error("Error fetching car:", error);
-    res.status(500).json({ message: "Server error.", error: error.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
-// Compare two cars
 const compareCars = async (req, res) => {
   try {
     const { car1, car2 } = req.query;
-
     if (!car1 || !car2) {
-      return res.status(400).json({ message: "Please provide two car IDs for comparison." });
+      return res.status(400).json({ message: "Two car IDs required" });
     }
 
     const cars = await Car.find({ _id: { $in: [car1, car2] } });
     if (cars.length !== 2) {
-      return res.status(404).json({ message: "One or both cars not found." });
+      return res.status(404).json({ message: "One or both cars not found" });
     }
 
-    const [firstCar, secondCar] = cars;
-    const comparison = {
-      car1: {
-        id: firstCar._id,
-        carName: firstCar.carName,
-        price: firstCar.price,
-        brand: firstCar.brand,
-        carType: firstCar.carType,
-        carYear: firstCar.carYear,
-        kmsDriven: firstCar.kmsDriven,
-        fuelType: firstCar.fuelType,
-        transmission: firstCar.transmission,
-        engine: firstCar.engine,
-        featuredImage: firstCar.featuredImage,
-      },
-      car2: {
-        id: secondCar._id,
-        carName: secondCar.carName,
-        price: secondCar.price,
-        brand: secondCar.brand,
-        carType: secondCar.carType,
-        carYear: secondCar.carYear,
-        kmsDriven: secondCar.kmsDriven,
-        fuelType: secondCar.fuelType,
-        transmission: secondCar.transmission,
-        engine: secondCar.engine,
-        featuredImage: secondCar.featuredImage,
-      },
-    };
-
-    res.status(200).json(comparison);
+    res.status(200).json({
+      car1: cars[0].toObject(),
+      car2: cars[1].toObject()
+    });
   } catch (error) {
-    console.error("Error comparing cars:", error);
-    res.status(500).json({ message: "Error comparing cars.", error: error.message });
+    res.status(500).json({ message: "Error comparing cars", error: error.message });
   }
 };
 

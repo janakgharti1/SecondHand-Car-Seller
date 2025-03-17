@@ -15,12 +15,13 @@ const carSchema = new mongoose.Schema({
   engine: { type: String, required: true },
   description: { type: String, required: true },
   featuredImage: { type: String, required: true },
-  gallery: { type: [String], required: true, validate: [arr => arr.length >= 2, "At least 2 gallery images required."] },
+  gallery: { type: [String], required: true, validate: [v => v.length >= 2, 'At least 2 gallery images required'] },
   picWithCar: { type: String, required: true },
-  vin: { type: String, required: true }, // Removed match constraint since frontend handles it
+  vin: { type: String, required: true},
   registrationNumber: { type: String, required: true },
-  insuranceStatus: { type: String, required: true, enum: ["Active", "Expired", "Not Insured"] },
+  insuranceStatus: { type: String, required: true, enum: ['Active', 'Expired', 'Not Insured'] },
   verificationDoc: { type: String },
+  agreementAccepted: { type: Boolean, required: true }
 }, { timestamps: true });
 
 const Car = mongoose.model("Car", carSchema);

@@ -7,7 +7,9 @@ import { onAuthStateChanged } from "firebase/auth";
 const SellCar = () => {
   const [formData, setFormData] = useState({
     brand: "",
+    customBrand: "",
     carType: "",
+    customCarType: "",
     transmission: "",
     fuelType: "",
     carYear: "",
@@ -16,6 +18,7 @@ const SellCar = () => {
     kmsDriven: "",
     price: "",
     location: "",
+    customLocation: "",
     engine: "",
     description: "",
     featuredImage: null,
@@ -24,19 +27,21 @@ const SellCar = () => {
     vin: "",
     registrationNumber: "",
     insuranceStatus: "",
-    verificationDoc: null
+    verificationDoc: null,
   });
 
   const [message, setMessage] = useState("");
   const [userUID, setUserUID] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [agreementAccepted, setAgreementAccepted] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         setUserUID(user.uid);
       } else {
-        setMessage("User not authenticated.");
+        setUserUID(null);
+        setMessage("Please log in to list a car.");
       }
     });
     return () => unsubscribe();
@@ -53,9 +58,38 @@ const SellCar = () => {
       newGallery[index] = e.target.files[0];
       setFormData({ ...formData, gallery: newGallery });
     } else {
-      const { name } = e.target;
-      setFormData({ ...formData, [name]: e.target.files[0] });
+      setFormData({ ...formData, [e.target.name]: e.target.files[0] });
     }
+  };
+
+  const handleAgreementChange = (e) => setAgreementAccepted(e.target.checked);
+
+  const resetForm = () => {
+    setFormData({
+      brand: "",
+      customBrand: "",
+      carType: "",
+      customCarType: "",
+      transmission: "",
+      fuelType: "",
+      carYear: "",
+      ownership: "",
+      carName: "",
+      kmsDriven: "",
+      price: "",
+      location: "",
+      customLocation: "",
+      engine: "",
+      description: "",
+      featuredImage: null,
+      gallery: Array(8).fill(null),
+      picWithCar: null,
+      vin: "",
+      registrationNumber: "",
+      insuranceStatus: "",
+      verificationDoc: null,
+    });
+    setAgreementAccepted(false);
   };
 
   const handleSubmit = async (e) => {
@@ -63,26 +97,60 @@ const SellCar = () => {
     setIsLoading(true);
     setMessage("");
 
-    if (!formData.brand || !formData.carType || !formData.transmission ||
-      !formData.fuelType || !formData.carYear || !formData.ownership || 
-      !formData.carName || !formData.kmsDriven || !formData.price || 
-      !formData.location || !formData.engine || !formData.description || 
-      !formData.featuredImage || !formData.picWithCar || !formData.vin || 
-      !formData.registrationNumber || !formData.insuranceStatus) {
-      setMessage("Please fill all required fields, including a picture with the car.");
-      setIsLoading(false);
-      return;
-    }
-
-    const galleryImages = formData.gallery.filter((file) => file !== null);
-    if (galleryImages.length < 2) {
-      setMessage("At least 2 gallery images are required.");
-      setIsLoading(false);
-      return;
-    }
-
     if (!userUID) {
       setMessage("Please log in to submit the car details.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!agreementAccepted) {
+      setMessage("You must agree to the commission terms.");
+      setIsLoading(false);
+      return;
+    }
+
+    const finalBrand = formData.brand === "Other" ? formData.customBrand : formData.brand;
+    const finalCarType = formData.carType === "Other" ? formData.customCarType : formData.carType;
+    const finalLocation = formData.location === "Other" ? formData.customLocation : formData.location;
+
+    // Client-side validation matching backend
+    if (!finalBrand || !finalCarType || !formData.transmission || !formData.fuelType ||
+        !formData.carYear || !formData.ownership || !formData.carName || !formData.kmsDriven ||
+        !formData.price || !finalLocation || !formData.engine || !formData.description ||
+        !formData.featuredImage || !formData.picWithCar || !formData.vin ||
+        !formData.registrationNumber || !formData.insuranceStatus) {
+      setMessage("Please fill all required fields.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!/^[A-HJ-NPR-Z0-9]{17}$/.test(formData.vin)) {
+      setMessage("VIN must be 17 characters (letters A-H, J-N, P-R, Z or numbers).");
+      setIsLoading(false);
+      return;
+    }
+
+    if (Number(formData.carYear) < 1990 || Number(formData.carYear) > new Date().getFullYear()) {
+      setMessage(`Car year must be between 1990 and ${new Date().getFullYear()}.`);
+      setIsLoading(false);
+      return;
+    }
+
+    if (Number(formData.kmsDriven) < 0) {
+      setMessage("Kilometers driven cannot be negative.");
+      setIsLoading(false);
+      return;
+    }
+
+    if (Number(formData.price) < 10000) {
+      setMessage("Price must be at least NPR 1000.");
+      setIsLoading(false);
+      return;
+    }
+
+    const galleryImages = formData.gallery.filter(file => file !== null);
+    if (galleryImages.length < 2) {
+      setMessage("At least 2 gallery images are required.");
       setIsLoading(false);
       return;
     }
@@ -90,18 +158,31 @@ const SellCar = () => {
     try {
       const token = await auth.currentUser.getIdToken();
       const uploadData = new FormData();
-      Object.keys(formData).forEach((key) => {
-        if (key === "gallery") {
-          formData.gallery.forEach((file) => {
-            if (file) uploadData.append(`gallery`, file);
-          });
-        } else if (key === "featuredImage" || key === "picWithCar" || key === "verificationDoc") {
-          if (formData[key]) uploadData.append(key, formData[key]);
-        } else {
-          uploadData.append(key, formData[key]);
-        }
-      });
-      uploadData.append("userId", userUID);
+
+      const fields = {
+        brand: finalBrand,
+        carType: finalCarType,
+        transmission: formData.transmission,
+        fuelType: formData.fuelType,
+        carYear: formData.carYear,
+        ownership: formData.ownership,
+        carName: formData.carName,
+        kmsDriven: formData.kmsDriven,
+        price: formData.price,
+        location: finalLocation,
+        engine: formData.engine,
+        description: formData.description,
+        vin: formData.vin,
+        registrationNumber: formData.registrationNumber,
+        insuranceStatus: formData.insuranceStatus,
+        agreementAccepted: agreementAccepted.toString(),
+      };
+
+      Object.entries(fields).forEach(([key, value]) => uploadData.append(key, value));
+      uploadData.append("featuredImage", formData.featuredImage);
+      galleryImages.forEach(file => uploadData.append("gallery", file));
+      uploadData.append("picWithCar", formData.picWithCar);
+      if (formData.verificationDoc) uploadData.append("verificationDoc", formData.verificationDoc);
 
       const response = await axios.post("http://localhost:4000/api/cars", uploadData, {
         headers: {
@@ -110,10 +191,11 @@ const SellCar = () => {
         },
       });
 
-      setMessage(response.data.message || "Car details uploaded successfully!");
+      setMessage(response.data.message);
+      resetForm();
     } catch (err) {
-      console.error("Error submitting car details:", err);
       setMessage(err.response?.data?.message || "Error uploading car details. Please try again.");
+      console.error("Submission error:", err);
     } finally {
       setIsLoading(false);
     }
@@ -128,12 +210,7 @@ const SellCar = () => {
           <label>
             <i className="fa fa-car"></i> Brand
           </label>
-          <select
-            name="brand"
-            value={formData.brand}
-            onChange={handleInputChange}
-            required
-          >
+          <select name="brand" value={formData.brand} onChange={handleInputChange} required>
             <option value="">Select Brand</option>
             <option value="Toyota">Toyota</option>
             <option value="Honda">Honda</option>
@@ -144,16 +221,22 @@ const SellCar = () => {
             <option value="Mahindra">Mahindra</option>
             <option value="Other">Other</option>
           </select>
+          {formData.brand === "Other" && (
+            <input
+              type="text"
+              name="customBrand"
+              placeholder="Enter custom brand"
+              value={formData.customBrand}
+              onChange={handleInputChange}
+              required
+              className="custom-input"
+            />
+          )}
 
           <label>
             <i className="fa fa-car-side"></i> Car Type
           </label>
-          <select
-            name="carType"
-            value={formData.carType}
-            onChange={handleInputChange}
-            required
-          >
+          <select name="carType" value={formData.carType} onChange={handleInputChange} required>
             <option value="">Select Car Type</option>
             <option value="SUV">SUV</option>
             <option value="Sedan">Sedan</option>
@@ -162,16 +245,22 @@ const SellCar = () => {
             <option value="MUV">MUV</option>
             <option value="Other">Other</option>
           </select>
+          {formData.carType === "Other" && (
+            <input
+              type="text"
+              name="customCarType"
+              placeholder="Enter custom car type"
+              value={formData.customCarType}
+              onChange={handleInputChange}
+              required
+              className="custom-input"
+            />
+          )}
 
           <label>
             <i className="fa fa-cogs"></i> Transmission
           </label>
-          <select
-            name="transmission"
-            value={formData.transmission}
-            onChange={handleInputChange}
-            required
-          >
+          <select name="transmission" value={formData.transmission} onChange={handleInputChange} required>
             <option value="">Select Transmission</option>
             <option value="Manual">Manual</option>
             <option value="Automatic">Automatic</option>
@@ -183,12 +272,7 @@ const SellCar = () => {
           <label>
             <i className="fa fa-gas-pump"></i> Fuel Type
           </label>
-          <select
-            name="fuelType"
-            value={formData.fuelType}
-            onChange={handleInputChange}
-            required
-          >
+          <select name="fuelType" value={formData.fuelType} onChange={handleInputChange} required>
             <option value="">Select Fuel Type</option>
             <option value="Petrol">Petrol</option>
             <option value="Diesel">Diesel</option>
@@ -207,19 +291,14 @@ const SellCar = () => {
             value={formData.carYear}
             onChange={handleInputChange}
             min="1990"
-            max="2025"
+            max={new Date().getFullYear()}
             required
           />
 
           <label>
             <i className="fa fa-user"></i> Ownership
           </label>
-          <select
-            name="ownership"
-            value={formData.ownership}
-            onChange={handleInputChange}
-            required
-          >
+          <select name="ownership" value={formData.ownership} onChange={handleInputChange} required>
             <option value="">Select Ownership</option>
             <option value="1st">1st Owner</option>
             <option value="2nd">2nd Owner</option>
@@ -260,7 +339,7 @@ const SellCar = () => {
           <input
             type="number"
             name="price"
-            placeholder="Price (₹)"
+            placeholder="Price (NPR)"
             value={formData.price}
             onChange={handleInputChange}
             min="1000"
@@ -272,12 +351,7 @@ const SellCar = () => {
           <label>
             <i className="fa fa-map-marker-alt"></i> Location
           </label>
-          <select
-            name="location"
-            value={formData.location}
-            onChange={handleInputChange}
-            required
-          >
+          <select name="location" value={formData.location} onChange={handleInputChange} required>
             <option value="">Select Location</option>
             <option value="Kathmandu">Kathmandu</option>
             <option value="Lalitpur">Lalitpur</option>
@@ -285,6 +359,17 @@ const SellCar = () => {
             <option value="Pokhara">Pokhara</option>
             <option value="Other">Other</option>
           </select>
+          {formData.location === "Other" && (
+            <input
+              type="text"
+              name="customLocation"
+              placeholder="Enter custom location"
+              value={formData.customLocation}
+              onChange={handleInputChange}
+              required
+              className="custom-input"
+            />
+          )}
 
           <label>
             <i className="fa fa-cogs"></i> Engine
@@ -306,7 +391,7 @@ const SellCar = () => {
           onChange={handleInputChange}
           required
           rows="4"
-        ></textarea>
+        />
 
         <div className="file-upload">
           <label>
@@ -316,12 +401,10 @@ const SellCar = () => {
             type="file"
             name="featuredImage"
             onChange={(e) => handleFileChange(e)}
-            accept="image/*"
+            accept="image/jpeg,image/png,image/jpg"
             required
           />
-          {formData.featuredImage && (
-            <span className="file-name">{formData.featuredImage.name}</span>
-          )}
+          {formData.featuredImage && <span className="file-name">{formData.featuredImage.name}</span>}
         </div>
 
         <div className="gallery">
@@ -331,22 +414,18 @@ const SellCar = () => {
               <div key={index} className="gallery-item">
                 <label className={image ? "has-image" : ""}>
                   {image ? (
-                    <span className="file-selected">
-                      <i className="fa fa-check"></i>
-                    </span>
+                    <span className="file-selected"><i className="fa fa-check"></i></span>
                   ) : (
                     <span className="add-image">+</span>
                   )}
                   <input
                     type="file"
                     onChange={(e) => handleFileChange(e, index)}
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/jpg"
                     style={{ display: "none" }}
                   />
                 </label>
-                {image && (
-                  <span className="file-name">{image.name}</span>
-                )}
+                {image && <span className="file-name">{image.name}</span>}
               </div>
             ))}
           </div>
@@ -356,17 +435,15 @@ const SellCar = () => {
           <label>
             <i className="fa fa-user-friends"></i> Picture with Car <span className="required">*</span>
           </label>
-          <p className="instruction">Please upload a clear picture of yourself with the car for verification.</p>
+          <p className="instruction">Upload a clear picture of yourself with the car for verification.</p>
           <input
             type="file"
             name="picWithCar"
             onChange={(e) => handleFileChange(e)}
-            accept="image/*"
+            accept="image/jpeg,image/png,image/jpg"
             required
           />
-          {formData.picWithCar && (
-            <span className="file-name">{formData.picWithCar.name}</span>
-          )}
+          {formData.picWithCar && <span className="file-name">{formData.picWithCar.name}</span>}
         </div>
 
         <div className="verification-section">
@@ -378,10 +455,12 @@ const SellCar = () => {
             <input
               type="text"
               name="vin"
-              placeholder="Enter VIN"
+              placeholder="Enter VIN (17 characters)"
               value={formData.vin}
               onChange={handleInputChange}
               maxLength="17"
+              pattern="[A-HJ-NPR-Z0-9]{17}"
+              title="VIN must be 17 characters (A-H, J-N, P-R, Z, 0-9)"
               required
             />
 
@@ -402,12 +481,7 @@ const SellCar = () => {
             <label>
               <i className="fa fa-shield-alt"></i> Insurance Status
             </label>
-            <select
-              name="insuranceStatus"
-              value={formData.insuranceStatus}
-              onChange={handleInputChange}
-              required
-            >
+            <select name="insuranceStatus" value={formData.insuranceStatus} onChange={handleInputChange} required>
               <option value="">Select Insurance Status</option>
               <option value="Active">Active</option>
               <option value="Expired">Expired</option>
@@ -417,25 +491,32 @@ const SellCar = () => {
 
           <div className="file-upload">
             <label>
-              <i className="fa fa-file-upload"></i> Verification Document (e.g., Registration, Insurance)
+              <i className="fa fa-file-upload"></i> Verification Document (Optional)
             </label>
             <input
               type="file"
               name="verificationDoc"
               onChange={(e) => handleFileChange(e)}
-              accept="image/*,application/pdf"
+              accept="image/jpeg,image/png,image/jpg,application/pdf"
             />
-            {formData.verificationDoc && (
-              <span className="file-name">{formData.verificationDoc.name}</span>
-            )}
+            {formData.verificationDoc && <span className="file-name">{formData.verificationDoc.name}</span>}
           </div>
         </div>
 
-        <button
-          className="submitbtn"
-          type="submit"
-          disabled={isLoading}
-        >
+        <div className="agreement-section">
+          <label className="agreement-checkbox">
+            <input
+              type="checkbox"
+              checked={agreementAccepted}
+              onChange={handleAgreementChange}
+              required
+            />
+            I agree that 10% of the entered price (NPR {formData.price ? (formData.price * 0.1).toLocaleString('en-IN') : '0'})
+            will be paid to the app owner as commission upon successful sale.
+          </label>
+        </div>
+
+        <button className="submitbtn" type="submit" disabled={isLoading || !userUID}>
           {isLoading ? "Submitting..." : "Submit"}
         </button>
       </form>

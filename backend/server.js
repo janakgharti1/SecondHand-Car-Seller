@@ -4,7 +4,7 @@ const cors = require("cors");
 const connectDB = require("./config/db");
 const carRoutes = require("./routes/carRoutes");
 const path = require("path");
-
+const multer = require("multer");
 const auctionRoutes = require('./routes/auctionRoutes');
 
 // Load environment variables
