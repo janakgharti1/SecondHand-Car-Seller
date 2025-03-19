@@ -9,13 +9,8 @@ const CarDetails = () => {
   const [car, setCar] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [contactForm, setContactForm] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    message: "",
-  });
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [similarCars, setSimilarCars] = useState([]);
 
   useEffect(() => {
     const fetchCarDetails = async () => {
@@ -23,6 +18,11 @@ const CarDetails = () => {
       try {
         const response = await axios.get(`http://localhost:4000/api/cars/${id}`);
         setCar(response.data);
+
+        const similarResponse = await axios.get(
+          `http://localhost:4000/api/cars/similar?type=${response.data.carType}&priceRange=${response.data.price}`
+        );
+        setSimilarCars(similarResponse.data.slice(0, 3));
       } catch (error) {
         console.error("Error fetching car details:", error);
       } finally {
@@ -34,54 +34,52 @@ const CarDetails = () => {
   }, [id]);
 
   const handlePrevImage = () => {
-    if (car && car.images && car.images.length > 0) {
+    if (car && car.gallery && car.gallery.length > 0) {
       setCurrentImageIndex((prevIndex) =>
-        prevIndex === 0 ? car.images.length - 1 : prevIndex - 1
+        prevIndex === 0 ? car.gallery.length - 1 : prevIndex - 1
       );
     }
   };
 
   const handleNextImage = () => {
-    if (car && car.images && car.images.length > 0) {
+    if (car && car.gallery && car.gallery.length > 0) {
       setCurrentImageIndex((prevIndex) =>
-        prevIndex === car.images.length - 1 ? 0 : prevIndex + 1
+        prevIndex === car.gallery.length - 1 ? 0 : prevIndex + 1
       );
     }
   };
 
-  const handleContactFormChange = (e) => {
-    const { name, value } = e.target;
-    setContactForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  const handleContactSeller = () => {
+    const autoMessage = `Dear Seller, I my interest in your ${car.brand} ${car.carName} (${car.carYear}), listed at NPR ${car.price.toLocaleString()}. Could you please provide additional information regarding its condition, service history, and availability for viewing?`;
+    navigate("/contactwithadmin", {
+      state: {
+        carId: id,
+        autoMessage: autoMessage,
+        carDetails: {
+          brand: car.brand,
+          name: car.carName,
+          year: car.carYear,
+          price: car.price,
+        },
+      },
+    });
   };
 
-  const handleContactFormSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:4000/api/inquiries", {
-        carId: id,
-        ...contactForm,
-      });
-      alert("Your inquiry has been sent successfully!");
-      setShowContactForm(false);
-      setContactForm({
-        name: "",
-        email: "",
-        phone: "",
-        message: "",
-      });
-    } catch (error) {
-      console.error("Error sending inquiry:", error);
-      alert("Failed to send inquiry. Please try again later.");
-    }
+  const toggleFavorite = () => {
+    setIsFavorite(!isFavorite);
+  };
+
+  const handleShare = () => {
+    const shareUrl = window.location.href;
+    navigator.clipboard.writeText(shareUrl);
+    alert("Link copied to clipboard!");
   };
 
   if (isLoading) {
     return (
       <div className="car-details-container">
         <div className="loading">
+          <i className="fa fa-spinner fa-spin"></i>
           <p>Loading car details...</p>
         </div>
       </div>
@@ -94,7 +92,7 @@ const CarDetails = () => {
         <div className="error">
           <h2>Car Not Found</h2>
           <p>The car you're looking for doesn't exist or has been removed.</p>
-          <button className="back-button" onClick={() => navigate("/explore-used-car")}>
+          <button className="back-button" onClick={() => navigate("/usedcar")}>
             Back to All Cars
           </button>
         </div>
@@ -102,11 +100,10 @@ const CarDetails = () => {
     );
   }
 
-  // Determine image to display (featuredImage as fallback)
-  const displayImage = car.images && car.images.length > 0
-    ? `http://localhost:4000/uploads/${car.images[currentImageIndex]}`
-    : car.featuredImage
-      ? `http://localhost:4000/uploads/${car.featuredImage}`
+  const allImages = car.gallery && car.gallery.length > 0 ? car.gallery : [car.featuredImage];
+  const displayImage =
+    allImages.length > 0
+      ? `http://localhost:4000/uploads/${allImages[currentImageIndex]}`
       : "https://via.placeholder.com/800x500";
 
   return (
@@ -115,7 +112,10 @@ const CarDetails = () => {
         <button className="back-button" onClick={() => navigate("/usedcar")}>
           <i className="fa fa-arrow-left"></i> Back to Cars
         </button>
-        <h1>{car.carName}</h1>
+        <h1>
+          {car.brand} {car.carName} ({car.carYear})
+          {car.isCertified && <span className="certified-badge">Certified</span>}
+        </h1>
         <p className="car-location">
           <i className="fa fa-map-marker-alt"></i> {car.location}
         </p>
@@ -124,23 +124,37 @@ const CarDetails = () => {
       <div className="car-details-content">
         <div className="image-gallery">
           <div className="main-image-container">
-            <button className="gallery-nav prev" onClick={handlePrevImage}>
+            <button
+              className="gallery-nav prev"
+              onClick={handlePrevImage}
+              disabled={allImages.length <= 1}
+            >
               <i className="fa fa-chevron-left"></i>
             </button>
-            <img src={displayImage} alt={car.carName} className="main-image" />
-            <button className="gallery-nav next" onClick={handleNextImage}>
+            <img
+              src={displayImage}
+              alt={`${car.carName} - view ${currentImageIndex + 1}`}
+              className="main-image"
+              onError={(e) => (e.target.src = "https://via.placeholder.com/800x500")}
+            />
+            <button
+              className="gallery-nav next"
+              onClick={handleNextImage}
+              disabled={allImages.length <= 1}
+            >
               <i className="fa fa-chevron-right"></i>
             </button>
           </div>
-          {car.images && car.images.length > 0 && (
+          {allImages.length > 1 && (
             <div className="thumbnail-container">
-              {car.images.map((image, index) => (
+              {allImages.map((image, index) => (
                 <img
                   key={index}
                   src={`http://localhost:4000/uploads/${image}`}
-                  alt={`${car.carName} - view ${index + 1}`}
+                  alt={`${car.carName} - thumbnail ${index + 1}`}
                   className={`thumbnail ${index === currentImageIndex ? "active" : ""}`}
                   onClick={() => setCurrentImageIndex(index)}
+                  onError={(e) => (e.target.src = "https://via.placeholder.com/100x60")}
                 />
               ))}
             </div>
@@ -150,17 +164,20 @@ const CarDetails = () => {
         <div className="car-info">
           <div className="price-action">
             <div className="price-box">
-              <h2 className="price">NPR {car.price} lakhs</h2>
-              <p className="price-note">
-                EMI from NPR {(car.price * 10000 * 0.01).toFixed(2)}/month*
-              </p>
+              <h2 className="price">NPR {car.price.toLocaleString()}</h2>
+              {car.priceNegotiable && <span className="negotiable">Negotiable</span>}
             </div>
-            <button
-              className="contact-seller-btn"
-              onClick={() => setShowContactForm(!showContactForm)}
-            >
-              Contact Seller
-            </button>
+            <div className="action-buttons">
+              <button className="contact-seller-btn" onClick={handleContactSeller}>
+                Contact Seller
+              </button>
+              <button className="favorite-btn" onClick={toggleFavorite}>
+                <i className={`fa fa-heart ${isFavorite ? "filled" : "outline"}`}></i>
+              </button>
+              <button className="share-btn" onClick={handleShare}>
+                <i className="fa fa-share-alt"></i>
+              </button>
+            </div>
           </div>
 
           <div className="key-specs">
@@ -168,14 +185,14 @@ const CarDetails = () => {
               <i className="fa fa-calendar"></i>
               <div className="spec-details">
                 <span className="spec-label">Year</span>
-                <span className="spec-value">{car.year}</span>
+                <span className="spec-value">{car.carYear}</span>
               </div>
             </div>
             <div className="spec-item">
               <i className="fa fa-road"></i>
               <div className="spec-details">
                 <span className="spec-label">Kms Driven</span>
-                <span className="spec-value">{car.kmsDriven} km</span>
+                <span className="spec-value">{car.kmsDriven.toLocaleString()} km</span>
               </div>
             </div>
             <div className="spec-item">
@@ -186,12 +203,37 @@ const CarDetails = () => {
               </div>
             </div>
             <div className="spec-item">
+              <i className="fa fa-cogs"></i>
+              <div className="spec-details">
+                <span className="spec-label">Transmission</span>
+                <span className="spec-value">{car.transmission}</span>
+              </div>
+            </div>
+            <div className="spec-item">
               <i className="fa fa-car"></i>
               <div className="spec-details">
                 <span className="spec-label">Car Type</span>
                 <span className="spec-value">{car.carType}</span>
               </div>
             </div>
+            <div className="spec-item">
+              <i className="fa fa-user"></i>
+              <div className="spec-details">
+                <span className="spec-label">Ownership</span>
+                <span className="spec-value">{car.ownership}</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="condition-report">
+            <h3>Condition Report</h3>
+            <p>{car.condition || "Good condition, minor wear and tear."}</p>
+            {car.serviceHistory && (
+              <div className="service-history">
+                <h4>Service History</h4>
+                <p>{car.serviceHistory}</p>
+              </div>
+            )}
           </div>
 
           <div className="car-description">
@@ -204,115 +246,62 @@ const CarDetails = () => {
             <table className="details-table">
               <tbody>
                 <tr>
-                  <td>Transmission</td>
-                  <td>{car.transmission || "N/A"}</td>
+                  <td>Engine</td>
+                  <td>{car.engine || "N/A"}</td>
                 </tr>
                 <tr>
-                  <td>Engine Capacity</td>
-                  <td>{car.engineCapacity ? `${car.engineCapacity} cc` : "N/A"}</td>
+                  <td>VIN</td>
+                  <td>{car.vin || "N/A"}</td>
                 </tr>
                 <tr>
-                  <td>Registration</td>
+                  <td>Registration Number</td>
                   <td>{car.registrationNumber || "N/A"}</td>
                 </tr>
                 <tr>
-                  <td>Color</td>
-                  <td>{car.color || "N/A"}</td>
+                  <td>Insurance Status</td>
+                  <td>{car.insuranceStatus || "N/A"}</td>
                 </tr>
                 <tr>
-                  <td>Ownership</td>
-                  <td>{car.ownership || "N/A"}</td>
-                </tr>
-                <tr>
-                  <td>Service History</td>
-                  <td>{car.serviceHistory ? "Available" : "Not Available"}</td>
+                  <td>Last Inspected</td>
+                  <td>{car.lastInspected || "N/A"}</td>
                 </tr>
               </tbody>
             </table>
           </div>
-
-          {car.features && car.features.length > 0 && (
-            <div className="features">
-              <h3>Features</h3>
-              <div className="features-list">
-                {car.features.map((feature, index) => (
-                  <div key={index} className="feature-item">
-                    <i className="fa fa-check"></i> {feature}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
-      {showContactForm && (
-        <div className="contact-form-overlay">
-          <div className="contact-form-container">
-            <button
-              className="close-form-btn"
-              onClick={() => setShowContactForm(false)}
-            >
-              <i className="fa fa-times"></i>
-            </button>
-            <h3>Contact Seller about {car.carName}</h3>
-            <form onSubmit={handleContactFormSubmit}>
-              <div className="form-group">
-                <label htmlFor="name">Your Name</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={contactForm.name}
-                  onChange={handleContactFormChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={contactForm.email}
-                  onChange={handleContactFormChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="phone">Phone Number</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={contactForm.phone}
-                  onChange={handleContactFormChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="message">Your Message</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={contactForm.message}
-                  onChange={handleContactFormChange}
-                  rows="4"
-                  required
-                ></textarea>
-              </div>
-              <button type="submit" className="submit-form-btn">
-                Send Inquiry
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
-
       <div className="similar-cars">
-        <h3>You might also like</h3>
-        {/* This would be populated with similar cars based on type/price/etc */}
-        <p className="coming-soon">Similar cars suggestions coming soon!</p>
+        <h3>You Might Also Like</h3>
+        {similarCars.length > 0 ? (
+          <div className="similar-cars-list">
+            {similarCars.map((similarCar) => (
+              <div
+                key={similarCar._id}
+                className="similar-car-card"
+                onClick={() => navigate(`/car/${similarCar._id}`)}
+              >
+                <img
+                  src={`http://localhost:4000/uploads/${similarCar.featuredImage}`}
+                  alt={similarCar.carName}
+                  onError={(e) => (e.target.src = "https://via.placeholder.com/200x120")}
+                />
+                <div className="similar-car-info">
+                  <h4>{similarCar.brand} {similarCar.carName}</h4>
+                  <p>NPR {similarCar.price.toLocaleString()}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="no-similar">No similar cars found.</p>
+        )}
+      </div>
+
+      <div className="footer-actions">
+        <button className="report-btn" onClick={() => alert("Report submitted!")}>
+          Report This Listing
+        </button>
       </div>
     </div>
   );
