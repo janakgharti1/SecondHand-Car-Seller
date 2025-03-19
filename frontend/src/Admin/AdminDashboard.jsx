@@ -7,16 +7,6 @@ const AdminDashboard = () => {
     <div className="admin-dashboard">
       {/* Sidebar */}
       <div className="admin-dashboard-left">
-        {/* later */}
-        {/* <div className="menu-item">
-          <NavLink
-            to=""
-            className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
-          >
-            <i className="fa fa-tachometer-alt"></i> Dashboard Overview
-          </NavLink>
-        </div> */} 
-
         <div className="menu-item">
           <NavLink
             to="user-management"
@@ -55,6 +45,14 @@ const AdminDashboard = () => {
             className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
           >
             <i className="fa fa-chart-line"></i> Reports & Analytics
+          </NavLink>
+        </div>
+        <div className="menu-item">
+          <NavLink
+            to="contactwithuser"
+            className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
+          >
+            <i className="fa fa-comments"></i> Chat With User
           </NavLink>
         </div>
       </div>

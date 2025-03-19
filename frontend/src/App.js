@@ -27,6 +27,8 @@ import DashboardOverview from "./Admin/DashboardOverview";
 import CarDetails from "./ExploreCars/CarDetails";
 import AntiqueCarAuction from "./Auction/AntiqueCarAuction";
 import AddCarAuction from "./Auction/AddCarAuction";
+import ContactWithAdmin from "./ContactChat/ContactWithAdmin";
+import ContactWithUser from "./Admin/ContactWithUser";
 
 
 function App() {
@@ -43,7 +45,7 @@ const AppLayout = ({ isAuthenticated }) => {
   const location = useLocation();
 
   // Define routes where Navbar should be hidden
-  const hideNavbarRoutes = ["/admindashboard", "/admindashboard/user-management", "/admindashboard/car-listings", "/admindashboard/auction-management", "/admindashboard/comparison-insights", "/admindashboard/reports-analytics"];
+  const hideNavbarRoutes = ["/admindashboard", "/admindashboard/user-management", "/admindashboard/car-listings", "/admindashboard/auction-management", "/admindashboard/comparison-insights", "/admindashboard/reports-analytics","/admindashboard/contactwithuser"];
 
   return (
     <>
@@ -63,6 +65,7 @@ const AppLayout = ({ isAuthenticated }) => {
         <Route path="/login" element={<Login />} />
         <Route path="/carauction" element={<AntiqueCarAuction />} />
         <Route path="/addcarauction" element={<AddCarAuction />} />
+        <Route path="/contactwithadmin" element={<ContactWithAdmin />} />
 
 
         {/* Protected Routes for Users */}
@@ -83,6 +86,7 @@ const AppLayout = ({ isAuthenticated }) => {
             <Route path="auction-management" element={<AuctionManagement />} />
             <Route path="comparison-insights" element={<ComparisonInsights />} />
             <Route path="reports-analytics" element={<ReportsAnalytics />} />
+            <Route path="contactwithuser" element={<ContactWithUser />} />
           </Route>
         </Route>
 
