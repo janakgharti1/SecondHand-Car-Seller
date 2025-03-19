@@ -36,7 +36,7 @@
 .filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 30px;
+  gap: 20px;
   justify-content: space-between;
 }
 
@@ -61,7 +61,7 @@
   padding: 10px 5px;
   border: 1px solid #ddd;
   border-radius: 6px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   transition: all 0.3s ease;
 }
 
@@ -75,9 +75,9 @@
   background-color: #3e92cc;
   color: white;
   border: none;
-  padding: 10px 10px;
+  padding: 11px 11px;
   border-radius: 6px;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 10px;
