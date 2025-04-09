@@ -2,7 +2,15 @@ import React, { useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
-import "../Admin/AdminDashboard.css"; // Import the specific AdminDashboard CSS
+import "../Admin/AdminDashboard.css";
+import { 
+  Users, 
+  Car, 
+  Gavel, 
+  Repeat,
+  ChartLine,
+  MessageSquare,
+} from "lucide-react";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -27,7 +35,6 @@ const AdminDashboard = () => {
   return (
     <div className="admin-dashboard">
       <div className="admin-dashboard-left">
-        {/* Adding a header similar to UserDashboard */}
         <div className="dashboard-username-logo">
           <svg
             className="profile-icon"
@@ -43,15 +50,15 @@ const AdminDashboard = () => {
           </svg>
           <span className="username">Admin</span>
         </div>
-
-        {/* Menu Section */}
+        
         <div className="menu-section">
+          <h3 className="section-title">Management</h3>
           <div className="menu-item">
             <NavLink
               to="user-management"
               className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
             >
-              <i className="fa fa-users"></i> User Management
+              <Users size={20} /> User Management
             </NavLink>
           </div>
           <div className="menu-item">
@@ -59,7 +66,7 @@ const AdminDashboard = () => {
               to="car-listings"
               className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
             >
-              <i className="fa fa-car"></i> Car Listings Management
+              <Car size={20} /> Car Listings Management
             </NavLink>
           </div>
           <div className="menu-item">
@@ -67,15 +74,19 @@ const AdminDashboard = () => {
               to="auction-management"
               className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
             >
-              <i className="fa fa-gavel"></i> Auction Management
+              <Gavel size={20} /> Auction Management
             </NavLink>
           </div>
+        </div>
+        
+        <div className="menu-section">
+          <h3 className="section-title">Analytics & Communication</h3>
           <div className="menu-item">
             <NavLink
               to="comparison-insights"
               className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
             >
-              <i className="fa fa-exchange-alt"></i> Car Comparison Insights
+              <Repeat size={20} /> Car Comparison Insights
             </NavLink>
           </div>
           <div className="menu-item">
@@ -83,7 +94,7 @@ const AdminDashboard = () => {
               to="reports-analytics"
               className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
             >
-              <i className="fa fa-chart-line"></i> Reports & Analytics
+              <ChartLine size={20} /> Reports & Analytics
             </NavLink>
           </div>
           <div className="menu-item">
@@ -91,7 +102,7 @@ const AdminDashboard = () => {
               to="contactwithuser"
               className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
             >
-              <i className="fa fa-comments"></i> Chat With User
+              <MessageSquare size={20} /> Chat With User
             </NavLink>
           </div>
         </div>
