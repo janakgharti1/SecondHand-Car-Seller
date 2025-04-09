@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import Login from "./Components/Login";
@@ -16,7 +16,6 @@ import CompareCar from "./Components/CompareCar";
 import Footer from "./Components/Footer";
 import UploadedCar from "./UserDashboard/UploadedCar";
 import UserProfile from "./UserDashboard/UserProfile";
-import Welcome from "./UserDashboard/Welcome";
 import AdminDashboard from "./Admin/AdminDashboard";
 import AuctionManagement from "./Admin/AuctionManagement";
 import CarListingManagement from "./Admin/CarListingManagement";
@@ -29,29 +28,14 @@ import AntiqueCarAuction from "./Auction/AntiqueCarAuction";
 import AddCarAuction from "./Auction/AddCarAuction";
 import ContactWithAdmin from "./ContactChat/ContactWithAdmin";
 import ContactWithUser from "./Admin/ContactWithUser";
-
+import Dashaboard from "./UserDashboard/Dashboard";
 
 function App() {
   const isAuthenticated = Boolean(localStorage.getItem("authToken"));
 
   return (
     <Router>
-      <AppLayout isAuthenticated={isAuthenticated} />
-    </Router>
-  );
-}
-
-const AppLayout = ({ isAuthenticated }) => {
-  const location = useLocation();
-
-  // Define routes where Navbar should be hidden
-  const hideNavbarRoutes = ["/admindashboard", "/admindashboard/user-management", "/admindashboard/car-listings", "/admindashboard/auction-management", "/admindashboard/comparison-insights", "/admindashboard/reports-analytics","/admindashboard/contactwithuser"];
-
-  return (
-    <>
-      {/* Show Navbar only if the current path is not in hideNavbarRoutes */}
-      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
-      
+      <Navbar /> {/* Navbar always visible */}
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -67,11 +51,11 @@ const AppLayout = ({ isAuthenticated }) => {
         <Route path="/addcarauction" element={<AddCarAuction />} />
         <Route path="/contactwithadmin" element={<ContactWithAdmin />} />
 
-
         {/* Protected Routes for Users */}
         <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="User" />}>
           <Route path="/userdashboard" element={<UserDashboard />}>
-            <Route index element={<Welcome />} />
+            <Route index element={<Dashaboard />} />
+            <Route path="dashboard" element={<Dashaboard />} />
             <Route path="uploaded-cars" element={<UploadedCar />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
@@ -89,10 +73,9 @@ const AppLayout = ({ isAuthenticated }) => {
             <Route path="contactwithuser" element={<ContactWithUser />} />
           </Route>
         </Route>
-
       </Routes>
-    </>
+    </Router>
   );
-};
+}
 
 export default App;
