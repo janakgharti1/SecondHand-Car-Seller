@@ -1,75 +1,203 @@
 .user-dashboard {
   display: flex;
-  min-height: 100vh;
-  background-color: #f8f9fa;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
+  min-height: calc(100vh - 70px);
+  background-color: #f0f7ff;
+  position: relative;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Sidebar styling */
 .user-dashboard-left {
-  width: 250px;
+  width: 280px;
   background-color: #ffffff;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-  padding: 25px 0;
-  transition: all 0.3s ease;
+  padding: 20px;
+  border-right: 1px solid #bfdbfe;
+  box-shadow: 0 4px 12px rgba(0, 0, 255, 0.05);
+  position: sticky;
+  top: 70px;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.dashboard-username-logo {
+  display: flex;
+  align-items: center; /* Align icon and username vertically */
+  gap: 10px; 
+  padding: 10px 0 25px;
+  border-bottom: 1px solid #dbeafe;
+}
+
+.profile-icon {
+  color: #1e40af; /* Match blue theme */
+  flex-shrink: 0; /* Prevent icon from shrinking */
+}
+
+.username {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1e3a8a;
+  margin: 0;
+  white-space: nowrap; /* Keep username on one line */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Handle long usernames */
+}
+
+.menu-section {
+  margin-bottom: 25px;
+}
+
+.section-title {
+  font-size: 14px;
+  color: #60a5fa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 15px 15px;
+  font-weight: 500;
 }
 
 .menu-item {
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 }
 
 .menu-link {
   display: flex;
   align-items: center;
-  padding: 12px 25px;
-  color: #666;
+  gap: 12px;
+  padding: 12px 15px;
+  color: #1e40af;
   text-decoration: none;
-  font-size: 15px;
+  border-radius: 8px;
   transition: all 0.2s ease;
-  border-left: 3px solid transparent;
+  font-size: 15px;
+  font-weight: 500;
+  position: relative;
 }
 
 .menu-link:hover {
-  color: #4361ee;
+  background-color: #dbeafe;
+  color: #1e3a8a;
 }
 
 .menu-link.active {
-  color: #4361ee;
-  background-color: rgba(67, 97, 238, 0.05);
-  border-left: 3px solid #4361ee;
-  font-weight: 500;
+  background-color: #3b82f6;
+  color: #ffffff;
+  font-weight: 600;
 }
 
-.menu-link i {
-  margin-right: 12px;
-  font-size: 16px;
-  width: 20px;
-  text-align: center;
+.badge {
+  background-color: #93c5fd;
+  color: #1e40af;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  margin-left: auto;
 }
 
+.badge.notification {
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.logout-section {
+  margin-top: auto;
+  margin-bottom: 25px;
+}
+
+.menu-link.logout {
+  color: #dc2626;
+}
+
+.menu-link.logout:hover {
+  background-color: #fee2e2;
+}
 
 .user-dashboard-right {
   flex: 1;
-  padding: 20px;
+  padding: 30px;
+  background-color: #f0f7ff;
   overflow-y: auto;
 }
 
-/* Responsive adjustments */
+.user-profile-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background-color: #dbeafe;
+  border-radius: 8px;
+  margin-top: auto;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: #93c5fd;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-info h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+.user-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #60a5fa;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .user-dashboard-left {
+    width: 250px;
+  }
+}
+
 @media (max-width: 768px) {
   .user-dashboard {
     flex-direction: column;
   }
-  
   .user-dashboard-left {
     width: 100%;
-    padding: 15px 0;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #bfdbfe;
+    padding: 15px;
   }
-  
-  .menu-link {
-    padding: 10px 20px;
+  .menu-section {
+    margin-bottom: 15px;
   }
-  
   .user-dashboard-right {
     padding: 20px;
+  }
+  .dashboard-username-logo {
+    padding: 5px 0 15px;
+    margin-bottom: 5px;
+  }
+  .user-profile-preview {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-dashboard-right {
+    padding: 15px;
+  }
+  .menu-link {
+    padding: 10px 12px;
+    font-size: 14px;
   }
 }
