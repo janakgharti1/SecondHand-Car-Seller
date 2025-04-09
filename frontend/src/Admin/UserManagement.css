@@ -35,7 +35,7 @@
 }
 
 .add-toggle-btn:hover {
-  background-color: #2962ff;
+  background-color: #1a4bff;
 }
 
 .alert {
@@ -83,7 +83,7 @@
 
 .form-row {
   display: flex;
-  gap: 32px; /* Increased gap for equal spacing */
+  gap: 32px;
   width: 100%;
 }
 
@@ -136,7 +136,7 @@
 }
 
 .submit-btn:hover {
-  background-color: #2962ff;
+  background-color: #1a4bff;
 }
 
 .submit-btn:disabled {
@@ -168,12 +168,15 @@
 .table-container {
   overflow-x: auto;
   padding: 0 16px;
+  min-width: 0;
+  width: 100%;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
+  table-layout: auto;
 }
 
 thead tr {
@@ -186,12 +189,14 @@ th {
   color: #757575;
   font-weight: 500;
   border-bottom: 2px solid #e0e0e0;
+  white-space: nowrap;
 }
 
 td {
   padding: 12px 16px;
   border-bottom: 1px solid #e0e0e0;
   color: #333;
+  vertical-align: middle;
 }
 
 tr:hover {
@@ -218,22 +223,32 @@ tr:hover {
 }
 
 .delete-btn {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  background-color: #f44336 !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 6px 12px !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  min-width: 70px !important;
+  height: 32px !important;
+  line-height: 20px !important;
+  text-align: center !important;
+  opacity: 1 !important;
+  position: relative !important;
+  z-index: 1 !important;
 }
 
 .delete-btn:hover {
-  background-color: #d32f2f;
+  background-color: #d32f2f !important;
 }
 
 .delete-btn:disabled {
-  background-color: #ffcdd2;
-  cursor: not-allowed;
+  background-color: #ffcdd2 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7 !important;
 }
 
 @media (max-width: 768px) {
@@ -250,5 +265,10 @@ tr:hover {
   .search-container,
   .table-container {
     padding: 0 8px;
+  }
+  
+  .delete-btn {
+    min-width: 60px;
+    padding: 4px 8px;
   }
 }

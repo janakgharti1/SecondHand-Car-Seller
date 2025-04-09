@@ -27,6 +27,11 @@ const UserManagement = () => {
         ...doc.data(),
       }));
       setUsers(userData);
+      console.log('Users loaded:', userData);
+      console.log('Snapshot empty:', snapshot.empty);
+    }, (error) => {
+      console.error('Firestore error:', error);
+      setError('Failed to load users: ' + error.message);
     });
 
     return () => unsubscribe();
@@ -70,7 +75,6 @@ const UserManagement = () => {
     setError("");
     setSuccess("");
 
-    // Validation
     if (!newUser.name.trim() || !newUser.email || !newUser.password || !newUser.dob || !newUser.gender) {
       setError("All fields are required.");
       return;
@@ -247,39 +251,56 @@ const UserManagement = () => {
               <th>Email</th>
               <th>Gender</th>
               <th>Role</th>
-              <th>Actions</th>
+              <th style={{ minWidth: '100px' }}>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {users
-              .filter(user => user.name.toLowerCase().includes(search.toLowerCase()))
-              .map((user) => (
-                <tr key={user.id}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.gender}</td>
-                  <td>
-                    <select
-                      className={`role-select ${user.role === "Admin" ? "admin-role" : "user-role"}`}
-                      value={user.role}
-                      onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                      disabled={loading}
-                    >
-                      <option value="User">User</option>
-                      <option value="Admin">Admin</option>
-                    </select>
-                  </td>
-                  <td>
-                    <button 
-                      className="delete-btn" 
-                      onClick={() => handleDelete(user.id)}
-                      disabled={loading}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+            {users.length === 0 ? (
+              <tr>
+                <td colSpan="5" style={{ textAlign: 'center', padding: '20px' }}>
+                  No users found. Add a user to begin.
+                </td>
+              </tr>
+            ) : (
+              users
+                .filter(user => user.name.toLowerCase().includes(search.toLowerCase()))
+                .map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.gender}</td>
+                    <td>
+                      <select
+                        className={`role-select ${user.role === "Admin" ? "admin-role" : "user-role"}`}
+                        value={user.role}
+                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                        disabled={loading}
+                      >
+                        <option value="User">User</option>
+                        <option value="Admin">Admin</option>
+                      </select>
+                    </td>
+                    <td style={{ minWidth: '100px' }}>
+                      <button 
+                        className="delete-btn" 
+                        onClick={() => {
+                          console.log('Delete clicked for user:', user.id);
+                          handleDelete(user.id);
+                        }}
+                        disabled={loading}
+                        style={{ 
+                          display: 'inline-block',
+                          visibility: 'visible',
+                          margin: '0 5px',
+                          padding: '6px 12px'
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+            )}
           </tbody>
         </table>
       </div>
