@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import "../App.css";
 import { Link, useNavigate } from "react-router-dom";
 import myImage from '../Assests/profile.png';
-import { db, auth } from '../firebase'; // Make sure to import these
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { db, auth } from '../firebase';
+import { collection, query, where, onSnapshot, doc } from 'firebase/firestore';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
   const [isAuthLoaded, setIsAuthLoaded] = useState(false);
+  const [userRole, setUserRole] = useState(null);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -17,18 +18,39 @@ const Navbar = () => {
 
   const isAuthenticated = !!localStorage.getItem("authToken");
 
-  // Effect to listen for unread messages
+  const handleUserImageClick = () => {
+    if (userRole === "Admin") {
+      navigate("/admindashboard");
+    } else if (userRole === "User") {
+      navigate("/userdashboard");
+    }
+  };
+
   useEffect(() => {
     let unsubscribeMessages;
-    
-    const setupMessageListener = (user) => {
+    let unsubscribeUser;
+
+    const setupListeners = (user) => {
       if (!user) {
         setUnreadCount(0);
+        setUserRole(null);
         setIsAuthLoaded(true);
         return;
       }
 
-      // Query for messages sent to this user that are unread
+      const userRef = doc(db, 'users', user.uid);
+      unsubscribeUser = onSnapshot(userRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserRole(userData.role || "User");
+        } else {
+          setUserRole("User");
+        }
+      }, (error) => {
+        console.error("Error fetching user role:", error);
+        setUserRole("User");
+      });
+
       const messagesQuery = query(
         collection(db, 'messages'),
         where('toUserEmail', '==', user.email),
@@ -46,14 +68,14 @@ const Navbar = () => {
       setIsAuthLoaded(true);
     };
 
-    // Listen for auth state changes
     const unsubscribeAuth = auth.onAuthStateChanged((user) => {
-      setupMessageListener(user);
+      setupListeners(user);
     });
 
     return () => {
       unsubscribeAuth();
       if (unsubscribeMessages) unsubscribeMessages();
+      if (unsubscribeUser) unsubscribeUser();
     };
   }, []);
 
@@ -76,7 +98,14 @@ const Navbar = () => {
         </Link>
       </div>
       <div id="right">
-        {isAuthenticated && <Link to="/userdashboard"><img src={myImage} alt="Logo"/></Link>}
+        {isAuthenticated && (
+          <img 
+            src={myImage} 
+            alt="User Profile" 
+            onClick={handleUserImageClick} 
+            style={{ cursor: "pointer" }}
+          />
+        )}
         {isAuthenticated ? (
           <button id="logoutbtn" onClick={handleLogout}>Logout</button>
         ) : (

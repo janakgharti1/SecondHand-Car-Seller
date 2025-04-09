@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import { auth, db } from "./firebase";
+import { doc, onSnapshot } from "firebase/firestore";
 
 import Login from "./Components/Login";
 import SignUp from "./Components/Signup";
@@ -31,11 +33,33 @@ import ContactWithUser from "./Admin/ContactWithUser";
 import Dashaboard from "./UserDashboard/Dashboard";
 
 function App() {
-  const isAuthenticated = Boolean(localStorage.getItem("authToken"));
+  const [userRole, setUserRole] = useState(null);
+  const isAuthenticated = !!localStorage.getItem("authToken");
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        const userRef = doc(db, 'users', user.uid);
+        onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setUserRole(docSnap.data().role || "User");
+          } else {
+            setUserRole("User");
+          }
+        }, (error) => {
+          console.error("Error fetching user role:", error);
+          setUserRole("User");
+        });
+      } else {
+        setUserRole(null);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
   return (
     <Router>
-      <Navbar /> {/* Navbar always visible */}
+      <Navbar />
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
@@ -52,7 +76,7 @@ function App() {
         <Route path="/contactwithadmin" element={<ContactWithAdmin />} />
 
         {/* Protected Routes for Users */}
-        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="User" />}>
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="User" userRole={userRole} />}>
           <Route path="/userdashboard" element={<UserDashboard />}>
             <Route index element={<Dashaboard />} />
             <Route path="dashboard" element={<Dashaboard />} />
@@ -62,7 +86,7 @@ function App() {
         </Route>
 
         {/* Protected Routes for Admins */}
-        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="Admin" />}>
+        <Route element={<ProtectedRoute isAuthenticated={isAuthenticated} requiredRole="Admin" userRole={userRole} />}>
           <Route path="/admindashboard" element={<AdminDashboard />}>
             <Route index element={<DashboardOverview />} />
             <Route path="user-management" element={<UserManagement />} />

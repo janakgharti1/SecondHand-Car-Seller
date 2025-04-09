@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { auth, db } from "../firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 import "../UserDashboard/UserDashboard.css";
@@ -14,6 +14,7 @@ import {
 
 const UserDashboard = () => {
   const [userName, setUserName] = useState("Guest");
+  const navigate = useNavigate();
 
   useEffect(() => {
     let unsubscribeUser;
@@ -23,7 +24,11 @@ const UserDashboard = () => {
         const userRef = doc(db, 'users', user.uid);
         unsubscribeUser = onSnapshot(userRef, (doc) => {
           if (doc.exists()) {
-            setUserName(doc.data().name || user.email || "User");
+            const data = doc.data();
+            setUserName(data.name || user.email || "User");
+            if (data.role === "Admin") {
+              navigate("/admindashboard");
+            }
           } else {
             setUserName(user.email || "User");
           }
@@ -44,11 +49,10 @@ const UserDashboard = () => {
       unsubscribeAuth();
       if (unsubscribeUser) unsubscribeUser();
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <div className="user-dashboard">
-      {/* Sidebar */}
       <div className="user-dashboard-left">
         <div className="dashboard-username-logo">
           <svg
@@ -123,7 +127,6 @@ const UserDashboard = () => {
         </div>
       </div>
         
-      {/* Main Content */}
       <div className="user-dashboard-right">
         <Outlet />
       </div>

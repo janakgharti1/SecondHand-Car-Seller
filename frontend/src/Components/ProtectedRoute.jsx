@@ -1,17 +1,13 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
-const ProtectedRoute = ({ isAuthenticated, requiredRole }) => {
-  const userRole = localStorage.getItem("userRole"); // Get role from localStorage
-
+const ProtectedRoute = ({ isAuthenticated, requiredRole, userRole }) => {
   if (!isAuthenticated) {
-    return <Navigate to="/login" />; // Redirect if not logged in
+    return <Navigate to="/login" />;
   }
-
-  if (requiredRole && userRole !== requiredRole) {
-    return <Navigate to="/" />; // Redirect to home if role mismatch
+  if (userRole && userRole !== requiredRole) {
+    return <Navigate to={userRole === "Admin" ? "/admindashboard" : "/userdashboard"} />;
   }
-
   return <Outlet />;
 };
 
