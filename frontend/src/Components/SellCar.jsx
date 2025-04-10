@@ -113,7 +113,6 @@ const SellCar = () => {
     const finalCarType = formData.carType === "Other" ? formData.customCarType : formData.carType;
     const finalLocation = formData.location === "Other" ? formData.customLocation : formData.location;
 
-    // Client-side validation matching backend
     if (!finalBrand || !finalCarType || !formData.transmission || !formData.fuelType ||
         !formData.carYear || !formData.ownership || !formData.carName || !formData.kmsDriven ||
         !formData.price || !finalLocation || !formData.engine || !formData.description ||
@@ -176,6 +175,7 @@ const SellCar = () => {
         registrationNumber: formData.registrationNumber,
         insuranceStatus: formData.insuranceStatus,
         agreementAccepted: agreementAccepted.toString(),
+        status: "pending", // Ensure new listings start as pending
       };
 
       Object.entries(fields).forEach(([key, value]) => uploadData.append(key, value));

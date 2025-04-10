@@ -17,15 +17,15 @@ const app = express();
 
 // Middleware
 app.use(cors());
-app.use(express.json({ limit: '50mb' })); // Increase JSON payload limit to 50MB
-app.use(express.urlencoded({ extended: true, limit: '50mb' })); // Increase URL-encoded payload limit to 50MB
-app.use("/uploads", express.static(path.join(__dirname, "uploads"))); // Serve uploaded images
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Routes
 app.use("/api", carRoutes);
 app.use('/api', auctionRoutes);
 
-// Error handling middleware (optional, for better error reporting)
+// Error handling middleware
 app.use((err, req, res, next) => {
   if (err instanceof multer.MulterError) {
     return res.status(400).json({ error: 'File upload error', details: err.message });

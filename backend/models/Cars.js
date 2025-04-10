@@ -17,11 +17,12 @@ const carSchema = new mongoose.Schema({
   featuredImage: { type: String, required: true },
   gallery: { type: [String], required: true, validate: [v => v.length >= 2, 'At least 2 gallery images required'] },
   picWithCar: { type: String, required: true },
-  vin: { type: String, required: true},
+  vin: { type: String, required: true },
   registrationNumber: { type: String, required: true },
   insuranceStatus: { type: String, required: true, enum: ['Active', 'Expired', 'Not Insured'] },
   verificationDoc: { type: String },
-  agreementAccepted: { type: Boolean, required: true }
+  agreementAccepted: { type: Boolean, required: true },
+  status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" }, // Added status field
 }, { timestamps: true });
 
 const Car = mongoose.model("Car", carSchema);

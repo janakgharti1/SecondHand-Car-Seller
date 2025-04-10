@@ -1,60 +1,452 @@
 .car-listings-management {
-    max-width: 1200px;
-    margin: auto;
-    padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.car-listings-management h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 28px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+/* Refresh Button */
+.car-listings-management .refresh-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 20px;
+  transition: background-color 0.3s;
+}
+
+.car-listings-management .refresh-btn:hover {
+  background-color: #45a049;
+}
+
+.car-listings-management .refresh-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+/* Error and Loading States */
+.car-listings-management .error-message {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border-left: 4px solid #c62828;
+}
+
+.car-listings-management .loading {
+  color: #2196F3;
+  margin: 15px 0;
+  font-style: italic;
+}
+
+/* Form Styling */
+.car-listings-management .car-form {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.car-listings-management .car-form input, 
+.car-listings-management .car-form textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.car-listings-management .car-form textarea {
+  grid-column: span 2;
+  min-height: 100px;
+}
+
+.car-listings-management .car-form input:focus, 
+.car-listings-management .car-form textarea:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
+
+.car-listings-management .car-form button {
+  grid-column: span 2;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.car-listings-management .car-form button:hover {
+  background-color: #1976D2;
+}
+
+.car-listings-management .car-form button:disabled {
+  background-color: #90CAF9;
+  cursor: not-allowed;
+}
+
+/* Table Styling */
+.car-listings-management .car-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.car-listings-management .car-table th {
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 12px 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+}
+
+.car-listings-management .car-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #eee;
+  vertical-align: middle;
+}
+
+.car-listings-management .car-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.car-listings-management .car-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Car Image in Table */
+.car-listings-management .car-image {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #eee;
+}
+
+/* Action Buttons */
+.car-listings-management .action-btn {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  margin: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.car-listings-management .action-btn:hover {
+  background-color: #1976D2;
+}
+
+.car-listings-management .delete-btn {
+  background-color: #F44336;
+}
+
+.car-listings-management .delete-btn:hover {
+  background-color: #D32F2F;
+}
+
+.car-listings-management .approve-btn {
+  background-color: #4CAF50;
+}
+
+.car-listings-management .approve-btn:hover {
+  background-color: #388E3C;
+}
+
+.car-listings-management .reject-btn {
+  background-color: #FF9800;
+}
+
+.car-listings-management .reject-btn:hover {
+  background-color: #F57C00;
+}
+
+.car-listings-management .action-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Modal Styling - Using a specific class for the car-listings modal */
+.car-listings-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.car-listings-modal-container {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 1000px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  animation: carlisting-modalFadeIn 0.3s;
+}
+
+@keyframes carlisting-modalFadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.car-listings-modal-content {
+  padding: 0;
+}
+
+.car-listings-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #eee;
+}
+
+.car-listings-modal-title {
+  margin: 0;
+  font-size: 22px;
+  color: #333;
+}
+
+.car-listings-modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #666;
+}
+
+.car-listings-modal-close:hover {
+  color: #000;
+}
+
+.car-listings-modal-body {
+  padding: 20px;
+}
+
+.car-listings-modal-footer {
+  padding: 15px 20px;
+  background-color: #f9f9f9;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #eee;
+}
+
+.car-listings-modal-button {
+  padding: 8px 16px;
+  margin-left: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.car-listings-button-blue {
+  background-color: #2196F3;
+  color: white;
+}
+
+.car-listings-button-blue:hover {
+  background-color: #1976D2;
+}
+
+/* Car Details Specific Styling */
+.car-listings-management .car-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .car-listings-management .car-detail-grid {
+    grid-template-columns: 1fr;
   }
-  
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .car-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .car-form input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .car-form button {
-    grid-column: span 2;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .car-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .car-table th, .car-table td {
-    padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
-  }
-  
-  .car-thumbnail {
-    width: 100px;
-    height: auto;
-    border-radius: 5px;
-  }
-  
-  .delete-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
+}
+
+.car-listings-management .car-gallery {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.car-listings-management .card-header {
+  position: relative;
+}
+
+.car-listings-management .car-type {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 1;
+}
+
+.car-listings-management .car-detail-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.car-listings-management .car-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 8px;
+  padding: 10px;
+}
+
+.car-listings-management .car-thumbnail {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.car-listings-management .car-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.car-listings-management .car-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.car-listings-management .car-detail-price-section {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.car-listings-management .car-detail-price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.car-listings-management .car-detail-location {
+  font-size: 16px;
+  color: #666;
+  margin: 0 0 10px 0;
+}
+
+.car-listings-management .car-detail-badges {
+  display: flex;
+  gap: 10px;
+}
+
+.car-listings-management .status-badge {
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.car-listings-management .status-badge-green {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.car-listings-management .status-badge-red {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.car-listings-management .status-badge-blue {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.car-listings-management .status-badge-gray {
+  background-color: #f5f5f5;
+  color: #616161;
+}
+
+.car-listings-management .car-detail-specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 15px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.car-listings-management .car-detail-spec {
+  display: flex;
+  flex-direction: column;
+}
+
+.car-listings-management .detail-label {
+  font-size: 12px;
+  color: #666;
+  margin: 0 0 4px 0;
+}
+
+.car-listings-management .detail-value {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  margin: 0;
+}
+
+.car-listings-management .car-detail-description {
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.car-listings-management .description-text {
+  font-size: 14px;
+  line-height: 1.6;
+  white-space: pre-line;
+  margin-top: 10px;
+}

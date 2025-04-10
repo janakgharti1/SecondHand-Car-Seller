@@ -45,7 +45,8 @@ const addCar = async (req, res) => {
       registrationNumber: body.registrationNumber,
       insuranceStatus: body.insuranceStatus,
       verificationDoc,
-      agreementAccepted: true
+      agreementAccepted: true,
+      status: "pending", // Explicitly set status, though schema default works too
     });
 
     const savedCar = await car.save();
@@ -76,9 +77,9 @@ const getAllCars = async (req, res) => {
 
 const deleteCar = async (req, res) => {
   try {
-    const car = await Car.findOneAndDelete({ _id: req.params.id, userId: req.user.uid });
+    const car = await Car.findOneAndDelete({ _id: req.params.id }); // Removed userId check
     if (!car) {
-      return res.status(404).json({ message: "Car not found or unauthorized" });
+      return res.status(404).json({ message: "Car not found" });
     }
     res.status(200).json({ message: "Car deleted successfully" });
   } catch (error) {
@@ -96,7 +97,7 @@ const updateCar = async (req, res) => {
     if (body.location) updatedData.location = body.location === "Other" ? body.customLocation : body.location;
     
     const fields = ['transmission', 'fuelType', 'ownership', 'carName', 'engine', 'description', 
-                    'vin', 'registrationNumber', 'insuranceStatus'];
+                    'vin', 'registrationNumber', 'insuranceStatus', 'status'];
     fields.forEach(field => { if (body[field]) updatedData[field] = body[field]; });
     
     if (body.carYear) updatedData.carYear = Number(body.carYear);
@@ -109,13 +110,13 @@ const updateCar = async (req, res) => {
     if (body.agreementAccepted) updatedData.agreementAccepted = body.agreementAccepted === "true";
 
     const car = await Car.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user.uid },
+      { _id: req.params.id }, // Removed userId check
       updatedData,
       { new: true, runValidators: true }
     );
 
     if (!car) {
-      return res.status(404).json({ message: "Car not found or unauthorized" });
+      return res.status(404).json({ message: "Car not found" });
     }
     res.status(200).json({ message: "Car updated successfully", car });
   } catch (error) {

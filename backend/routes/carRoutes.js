@@ -31,8 +31,8 @@ const uploadFields = upload.fields([
 router.post("/cars", authenticateUser, uploadFields, addCar);
 router.get("/cars/user", authenticateUser, getUserCars);
 router.get("/cars", getAllCars);
-router.delete("/cars/:id", authenticateUser, deleteCar);
-router.put("/cars/:id", authenticateUser, uploadFields, updateCar);
+router.delete("/cars/:id", deleteCar);
+router.put("/cars/:id", uploadFields, updateCar);
 router.get("/cars/:id", getCarById);
 router.get("/cars/compare", compareCars);
 
