@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { auth } from "../firebase"; // Assuming you have this configured
+import { onAuthStateChanged } from "firebase/auth";
 import "../Styles/ExploreUsedCar.css";
 
 const ExploreUsedCar = () => {
@@ -15,15 +17,28 @@ const ExploreUsedCar = () => {
   const [minYear, setMinYear] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const carsPerPage = 6; // Pagination: 6 cars per page
+  const [userUID, setUserUID] = useState(null); // Added to track current user
+  const carsPerPage = 6;
 
-  // Fetch car data from the backend
+  // Monitor authentication state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUserUID(user ? user.uid : null);
+    });
+    return () => unsubscribe();
+  }, []);
+
   useEffect(() => {
     const fetchCars = async () => {
       setIsLoading(true);
       try {
         const response = await axios.get("http://localhost:4000/api/cars");
-        setCars(response.data);
+        // Filter approved cars and exclude current user's cars
+        const approvedCars = response.data.filter(car => 
+          car.status === "approved" && 
+          car.userId !== userUID // Assuming your car objects have a userId field
+        );
+        setCars(approvedCars);
       } catch (error) {
         console.error("Error fetching cars:", error);
       } finally {
@@ -32,15 +47,13 @@ const ExploreUsedCar = () => {
     };
 
     fetchCars();
-  }, []);
+  }, [userUID]); // Added userUID as dependency
 
-  // Get unique values for dropdowns
   const uniqueLocations = [...new Set(cars.map(car => car.location))].sort();
   const uniqueCarTypes = [...new Set(cars.map(car => car.carType))].sort();
   const uniqueFuelTypes = [...new Set(cars.map(car => car.fuelType))].sort();
   const uniqueTransmissions = [...new Set(cars.map(car => car.transmission))].sort();
 
-  // Apply filters
   const filteredCars = cars.filter((car) => {
     const matchesSearch = car.carName.toLowerCase().includes(search.toLowerCase()) ||
                           car.brand.toLowerCase().includes(search.toLowerCase());
@@ -55,13 +68,11 @@ const ExploreUsedCar = () => {
            matchesTransmission && matchesBudget && matchesYear;
   });
 
-  // Pagination logic
   const indexOfLastCar = currentPage * carsPerPage;
   const indexOfFirstCar = indexOfLastCar - carsPerPage;
   const currentCars = filteredCars.slice(indexOfFirstCar, indexOfLastCar);
   const totalPages = Math.ceil(filteredCars.length / carsPerPage);
 
-  // Reset all filters
   const resetFilters = () => {
     setSearch("");
     setCarTypeFilter("");
@@ -73,7 +84,6 @@ const ExploreUsedCar = () => {
     setCurrentPage(1);
   };
 
-  // Handle page change
   const handlePageChange = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -86,7 +96,6 @@ const ExploreUsedCar = () => {
         <p>Browse our collection of quality pre-owned vehicles</p>
       </div>
 
-      {/* Search and Filters */}
       <div className="filters-container">
         <div className="filters">
           <div className="filter-group">
@@ -194,12 +203,10 @@ const ExploreUsedCar = () => {
         </div>
       </div>
 
-      {/* Results Summary */}
       <div className="results-summary">
         <h2>Found {filteredCars.length} cars matching your criteria</h2>
       </div>
 
-      {/* Car List */}
       <div className="carlist">
         {isLoading ? (
           <div className="no-results">
@@ -262,7 +269,6 @@ const ExploreUsedCar = () => {
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="pagination">
           <button
