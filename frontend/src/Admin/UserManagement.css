@@ -222,7 +222,7 @@ tr:hover {
   color: #757575;
 }
 
-.delete-btn {
+td .delete-btn {
   background-color: #f44336 !important;
   color: white !important;
   border: none !important;

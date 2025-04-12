@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auctionController = require('../controllers/auctionController');
 const multer = require('multer');
+const path = require('path');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -10,11 +11,11 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
+    cb(null, `${uniqueSuffix}${path.extname(file.originalname)}`);
+  },
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit per file
   fileFilter: (req, file, cb) => {
@@ -25,11 +26,14 @@ const upload = multer({
       return cb(null, true);
     }
     cb(new Error('Only images (JPEG, PNG, WebP) are allowed'));
-  }
+  },
 });
 
 // Routes
 router.post('/auctions', upload.array('images', 20), auctionController.createAuction);
 router.get('/auctions', auctionController.getAuctions);
+router.get('/auctions/:id', auctionController.getAuctionById);
+router.post('/auctions/:id/bid', auctionController.placeBid);
+router.post('/auctions/:id/buy-now', auctionController.buyNow);
 
 module.exports = router;
