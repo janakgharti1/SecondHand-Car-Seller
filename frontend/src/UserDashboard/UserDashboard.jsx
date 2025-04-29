@@ -93,7 +93,6 @@ const UserDashboard = () => {
               className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
             >
               <Heart size={20} /> Favorites
-              <span className="badge">3</span>
             </NavLink>
           </div>
         </div>

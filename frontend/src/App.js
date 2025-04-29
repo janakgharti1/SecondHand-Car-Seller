@@ -18,6 +18,7 @@ import CompareCar from "./Components/CompareCar";
 import Footer from "./Components/Footer";
 import UploadedCar from "./UserDashboard/UploadedCar";
 import UserProfile from "./UserDashboard/UserProfile";
+import MyFavourites from "./UserDashboard/MyFavourites";
 import AdminDashboard from "./Admin/AdminDashboard";
 import AuctionManagement from "./Admin/AuctionManagement";
 import CarListingManagement from "./Admin/CarListingManagement";
@@ -81,6 +82,7 @@ function App() {
             <Route index element={<Dashaboard />} />
             <Route path="dashboard" element={<Dashaboard />} />
             <Route path="uploaded-cars" element={<UploadedCar />} />
+            <Route path="favorites" element={<MyFavourites />} />
             <Route path="profile" element={<UserProfile />} />
           </Route>
         </Route>

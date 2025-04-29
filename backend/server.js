@@ -6,6 +6,7 @@ const carRoutes = require("./routes/carRoutes");
 const path = require("path");
 const multer = require("multer");
 const auctionRoutes = require('./routes/auctionRoutes');
+const favoriteRoutes = require('./routes/favoriteRoutes');
 
 // Load environment variables
 dotenv.config();
@@ -19,11 +20,12 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "Uploads")));
 
 // Routes
 app.use("/api", carRoutes);
 app.use('/api', auctionRoutes);
+app.use('/api', favoriteRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
