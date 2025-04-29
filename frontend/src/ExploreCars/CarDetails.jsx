@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { auth } from "../firebase";
 import axios from "axios";
 import "./CarDetails.css";
+
+// Get the logged-in user's ID from localStorage
+const getUserId = () => localStorage.getItem("userId");
 
 const CarDetails = () => {
   const { id } = useParams();
@@ -11,18 +15,37 @@ const CarDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [similarCars, setSimilarCars] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchCarDetails = async () => {
       setIsLoading(true);
       try {
+        // Fetch car details
         const response = await axios.get(`http://localhost:4000/api/cars/${id}`);
         setCar(response.data);
 
+        // Fetch similar cars
         const similarResponse = await axios.get(
           `http://localhost:4000/api/cars/similar?type=${response.data.carType}&priceRange=${response.data.price}`
         );
         setSimilarCars(similarResponse.data.slice(0, 3));
+
+        // Check if the car is in the user's favorites
+        const userId = getUserId();
+        if (userId && auth.currentUser) {
+          try {
+            const token = await auth.currentUser.getIdToken();
+            const favoriteResponse = await axios.get(`http://localhost:4000/api/favorites`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            const isFav = favoriteResponse.data.some((fav) => fav._id === id);
+            setIsFavorite(isFav);
+          } catch (error) {
+            console.error("Error checking favorite status:", error);
+            // Don't show error to user, just assume not favorited
+          }
+        }
       } catch (error) {
         console.error("Error fetching car details:", error);
       } finally {
@@ -50,7 +73,7 @@ const CarDetails = () => {
   };
 
   const handleContactSeller = () => {
-    const autoMessage = `Dear Seller, I my interest in your ${car.brand} ${car.carName} (${car.carYear}), listed at NPR ${car.price.toLocaleString()}. Could you please provide additional information regarding its condition, service history, and availability for viewing?`;
+    const autoMessage = `Dear Seller, I am interested in your ${car.brand} ${car.carName} (${car.carYear}), listed at NPR ${car.price.toLocaleString()}. Could you please provide additional information regarding its condition, service history, and availability for viewing?`;
     navigate("/contactwithadmin", {
       state: {
         carId: id,
@@ -65,8 +88,56 @@ const CarDetails = () => {
     });
   };
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+  const toggleFavorite = async () => {
+    if (isSubmitting) return;
+    
+    if (!auth.currentUser) {
+      alert("Please log in to add to favorites.");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      const token = await auth.currentUser.getIdToken();
+      
+      if (isFavorite) {
+        await axios.delete(`http://localhost:4000/api/favorites/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setIsFavorite(false);
+      } else {
+        // Log for debugging
+        console.log('Adding to favorites:', id);
+        
+        await axios.post(
+          `http://localhost:4000/api/favorites`,
+          { carId: id },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setIsFavorite(true);
+      }
+      
+      const action = isFavorite ? "removed from" : "added to";
+      alert(`Car ${action} your favorites successfully!`);
+      
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      
+      if (error.response) {
+        // Log detailed error information
+        console.error("Response error:", error.response.data);
+        alert(`Failed to update favorites: ${error.response.data.error || "Please try again"}`);
+      } else if (error.request) {
+        alert("Network error. Please check your connection and try again.");
+      } else {
+        alert("Failed to update favorites. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleShare = () => {
@@ -287,7 +358,9 @@ const CarDetails = () => {
                   onError={(e) => (e.target.src = "https://via.placeholder.com/200x120")}
                 />
                 <div className="similar-car-info">
-                  <h4>{similarCar.brand} {similarCar.carName}</h4>
+                  <h4>
+                    {similarCar.brand} {similarCar.carName}
+                  </h4>
                   <p>NPR {similarCar.price.toLocaleString()}</p>
                 </div>
               </div>
