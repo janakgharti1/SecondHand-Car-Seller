@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import axios from "axios";
-import { Trash2, AlertCircle, CheckCircle, X, RefreshCw, Edit } from "lucide-react";
+import { Trash2, AlertCircle, CheckCircle, X, Edit } from "lucide-react";
 import "../UserDashboard/UploadedCar.css";
 
 const DEFAULT_IMAGE = "/api/placeholder/400/320";
@@ -63,6 +63,12 @@ const UploadedCar = () => {
   const handleImageError = (e) => {
     e.target.onerror = null;
     e.target.src = DEFAULT_IMAGE;
+  };
+  
+  // Format price in NPR
+  const formatPrice = (price) => {
+    if (!price) return "NPR 0";
+    return `NPR ${price.toLocaleString('en-IN')}`;
   };
 
   const fetchUserCars = useCallback(async () => {
@@ -274,16 +280,8 @@ const UploadedCar = () => {
       <div className="dashboard-content">
         <div className="dashboard-header">
           <div className="dashboard-title">
-            <p>Manage all your car listings in one place</p>
+            <h2>My Uploaded Cars</h2>
           </div>
-          <button
-            onClick={fetchUserCars}
-            className={`refresh-button ${loading ? "loading" : ""}`}
-            disabled={loading}
-          >
-            <RefreshCw className="button-icon" />
-            Refresh
-          </button>
         </div>
 
         {loading ? (
@@ -328,7 +326,7 @@ const UploadedCar = () => {
                       <h3 className="car-title">{car.carName}</h3>
                       <p className="car-subtitle">{car.brand} • {car.carYear}</p>
                     </div>
-                    <p className="car-price">₹{car.price.toLocaleString()}</p>
+                    <p className="car-price">{formatPrice(car.price)}</p>
                   </div>
 
                   <div className="car-specs">
@@ -438,7 +436,7 @@ const UploadedCar = () => {
 
                   <div className="car-info">
                     <div className="car-detail-price-section">
-                      <p className="car-detail-price">₹{selectedCar.price.toLocaleString()}</p>
+                      <p className="car-detail-price">{formatPrice(selectedCar.price)}</p>
                       <p className="car-detail-location">{selectedCar.location}</p>
                       <div className="car-detail-badges">
                         <span className={`status-badge ${selectedCar.sold ? "status-badge-red" : "status-badge-green"}`}>
@@ -726,7 +724,7 @@ const UploadedCar = () => {
                     <div className="edit-tab-content">
                       <div className="form-row">
                         <div className="form-group">
-                          <label htmlFor="price" className="form-label">Price (₹) <span className="required">*</span></label>
+                          <label htmlFor="price" className="form-label">Price (NPR) <span className="required">*</span></label>
                           <input
                             type="number"
                             id="price"
@@ -737,7 +735,7 @@ const UploadedCar = () => {
                             min="0"
                             required
                           />
-                          <p className="form-hint">Enter the price in Indian Rupees without commas or decimals</p>
+                          <p className="form-hint">Enter the price in Nepalese Rupees without commas or decimals</p>
                         </div>
                       </div>
                       <div className="form-row">
@@ -750,7 +748,7 @@ const UploadedCar = () => {
                             value={editFormData.location}
                             onChange={handleEditFormChange}
                             className="form-input"
-                            placeholder="e.g. Mumbai, Delhi, Bangalore"
+                            placeholder="e.g. Kathmandu, Pokhara, Lalitpur"
                             required
                           />
                         </div>
