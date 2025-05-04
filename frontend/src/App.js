@@ -19,6 +19,7 @@ import Footer from "./Components/Footer";
 import UploadedCar from "./UserDashboard/UploadedCar";
 import UserProfile from "./UserDashboard/UserProfile";
 import MyFavourites from "./UserDashboard/MyFavourites";
+import HelpandSupport from "./UserDashboard/HelpandSupport";
 import AdminDashboard from "./Admin/AdminDashboard";
 import AuctionManagement from "./Admin/AuctionManagement";
 import CarListingManagement from "./Admin/CarListingManagement";
@@ -84,6 +85,7 @@ function App() {
             <Route path="uploaded-cars" element={<UploadedCar />} />
             <Route path="favorites" element={<MyFavourites />} />
             <Route path="profile" element={<UserProfile />} />
+            <Route path="help-support" element={<HelpandSupport />} />
           </Route>
         </Route>
 

@@ -40,6 +40,12 @@ const Dashboard = () => {
     e.target.src = DEFAULT_IMAGE;
   };
 
+  // Format price in NPR
+  const formatPrice = (price) => {
+    if (!price) return "NPR 0";
+    return `NPR ${price.toLocaleString('en-IN')}`;
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -363,7 +369,7 @@ const Dashboard = () => {
                   <p className="upload-title">{car.carName || "Unnamed Vehicle"}</p>
                   <p className="upload-subtitle">
                     {car.brand || "Unknown"} • {car.carYear || "N/A"} • 
-                    ₹{(car.price || 0).toLocaleString()}
+                    {formatPrice(car.price)}
                   </p>
                   <p className="upload-date">
                     Uploaded: {car.createdAt.toLocaleDateString()}

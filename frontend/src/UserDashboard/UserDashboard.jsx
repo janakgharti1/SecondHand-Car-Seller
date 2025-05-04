@@ -7,7 +7,6 @@ import {
   Home, 
   Car, 
   Heart,  
-  Settings, 
   User, 
   HelpCircle,
 } from "lucide-react";
@@ -109,15 +108,7 @@ const UserDashboard = () => {
           </div>
           <div className="menu-item">
             <NavLink
-              to="settings"
-              className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
-            >
-              <Settings size={20} /> Settings
-            </NavLink>
-          </div>
-          <div className="menu-item">
-            <NavLink
-              to="help"
+              to="help-support"
               className={({ isActive }) => (isActive ? "menu-link active" : "menu-link")}
             >
               <HelpCircle size={20} /> Help & Support
