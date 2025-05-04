@@ -1,0 +1,203 @@
+.help-support-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 200px);
+  background-color: #f0f7ff;
+}
+
+.help-support-content {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 255, 0.05);
+  padding: 2.5rem;
+  border: 1px solid #bfdbfe;
+}
+
+.help-support-content h2 {
+  color: #1e3a8a;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  text-align: center;
+  position: relative;
+  font-weight: 700;
+}
+
+.help-support-content h2:after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background: #3b82f6;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.business-info {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.business-info h3 {
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.business-info p {
+  color: #4b5563;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+}
+
+.contact-section {
+  margin-bottom: 3rem;
+}
+
+.contact-section h3 {
+  color: #1e3a8a;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.contact-card {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.contact-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 255, 0.1);
+  border-color: #bfdbfe;
+}
+
+.contact-card i {
+  font-size: 2rem;
+  color: #3b82f6;
+  margin-bottom: 1rem;
+}
+
+.contact-card h4 {
+  color: #1e3a8a;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.contact-card p {
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.faq-section {
+  margin-bottom: 3rem;
+}
+
+.faq-section h3 {
+  color: #1e3a8a;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.faq-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  border-color: #bfdbfe;
+  box-shadow: 0 4px 12px rgba(0, 0, 255, 0.05);
+}
+
+.faq-item h4 {
+  color: #1e3a8a;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.faq-item p {
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.social-media {
+  text-align: center;
+}
+
+.social-media h3 {
+  color: #1e3a8a;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.social-icon {
+  color: #3b82f6;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  color: #1e40af;
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .help-support-container {
+    padding: 1rem;
+  }
+
+  .help-support-content {
+    padding: 1.5rem;
+  }
+
+  .contact-grid,
+  .social-icons {
+    gap: 1rem;
+  }
+
+  .help-support-content h2 {
+    font-size: 1.75rem;
+  }
+
+  .business-info h3,
+  .contact-section h3,
+  .faq-section h3,
+  .social-media h3 {
+    font-size: 1.25rem;
+  }
+}
